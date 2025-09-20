@@ -1,1 +1,40 @@
-{}
+{
+  "posts": [
+    {
+      "id": 1,
+      "product_name": "Galletas",
+      "price": "$900 c/u",
+      "stock": 15,
+      "tag": "Comida",
+      "description": "Galletas de vainilla con chispas de chocolate.",
+      "location": "Biblioteca 850",
+      "image": "../img/galletas.png",
+      "post_author": "Alan Brito",
+      "availability": true
+    },
+    {
+      "id": 2,
+      "product_name": "Anillos, aros y cadenas",
+      "price": "Desde $5000",
+      "stock": 12,
+      "tag": "Joyas",
+      "description": "Joyas bañadas en oro.",
+      "location": "B01 - 851",
+      "image": "../img/joyas.png",
+      "post_author": "Jessica Lagos",
+      "availability": true
+    },
+    {
+      "id": 3,
+      "product_name": "Arreglo PCs",
+      "price": "Consultar",
+      "stock": null,
+      "tag": "Servicios",
+      "description": "Arreglo laptops o computadores de torre, consultar por precios.",
+      "location": null,
+      "image": "../img/computadores.png",
+      "post_author": "Franco Veliz",
+      "availability": true
+    }
+  ]
+}
