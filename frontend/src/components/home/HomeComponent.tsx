@@ -14,14 +14,15 @@ const HomeComponent = () => {
   const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/tags").then((response) => {
-      setTags(response.data);
-    });
+  axios.get("http://localhost:3001/tags").then((response) => {
+    const tagNames = response.data.map((t: {id: number, name: string}) => t.name);
+    setTags(tagNames);
+  });
   }, []);
 
   function filteredPosts(postsData: Post[]): Post[] {
     return postsData.filter((post) => {
-      if (tagFilter && post.tag !== tagFilter) {
+      if (tagFilter && tagFilter !== "Todas" && post.tag !== tagFilter) {
         return false;
       }
       if (availabilityFilter && post.availability !== availabilityFilter) {
