@@ -14,20 +14,21 @@ const PostsList = () => {
 
     
     function filteredPosts(postsData: Post[]): Post[] {
-        return postsData.filter((post) => {
-            if (tagFilter && post.tag !== tagFilter) {
-                return false;
-            }
-            if (availabilityFilter && post.availability !== availabilityFilter) {
-                return false;
-            }
-            return true;
-        });
-    };
+    return postsData.filter((post) => {
+      if (tagFilter && tagFilter !== "Todas" && post.tag !== tagFilter) {
+        return false;
+      }
+      if (availabilityFilter && post.availability !== availabilityFilter) {
+        return false;
+      }
+      return true;
+    });
+  };
 
     useEffect(() => {
         axios.get("http://localhost:3001/tags").then((response) => {
-        setTags(response.data);
+        const tagNames = response.data.map((t: {id: number, name: string}) => t.name);
+        setTags(tagNames);
         });
     }, []);
 

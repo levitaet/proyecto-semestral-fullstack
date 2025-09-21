@@ -47,12 +47,25 @@
       "image": "/img/brownies.png",
       "post_author": "María Jerez",
       "availability": true
+    },
+    {
+      "id": 4,
+      "product_name": "Cables USB-C",
+      "price": "$3000 c/u",
+      "stock": 20,
+      "tag": "Electrónica",
+      "description": "Cables USB-C de 1m compatibles con carga rápida.",
+      "location": "Hall Sur 850",
+      "image": "/img/cables.png",
+      "post_author": "Diego Soto",
+      "availability": false
     }
   ],
   "tags": [
-    "Todas",
-    "Comida",
-    "Joyas",
-    "Servicios"
+    {"id": 1, "name": "Todas"},
+    {"id": 2, "name": "Comida"},
+    {"id": 3, "name": "Joyas"},
+    {"id": 4, "name": "Servicios"},
+    {"id": 5, "name": "Electrónica"}
   ]
 }
