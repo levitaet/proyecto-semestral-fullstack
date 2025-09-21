@@ -92,3 +92,43 @@
     grid-template-columns: 360px;
   }
 }
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;              
+  width: 100%;
+  max-width: 400px;      
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.form label {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.form input,
+.form textarea,
+.form select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
