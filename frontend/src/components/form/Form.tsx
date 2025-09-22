@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { ImageUpload } from "./ImageUpload";
 
 const Form = () => {
     const [formData, setFormData] = useState({
@@ -13,7 +14,6 @@ const Form = () => {
         stock: null as number | null,
         post_author: "",
     });
-
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
@@ -30,8 +30,6 @@ const Form = () => {
             });
         }
     };
-
-
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -78,14 +76,7 @@ const Form = () => {
                 required 
             />
 
-            <label htmlFor="image">Imagen (URL)</label>
-            <input 
-                type="text" 
-                id="image" 
-                name="image" 
-                value={formData.image}
-                onChange={handleChange}
-            />
+            <ImageUpload />
 
             <label htmlFor="tag">Categoría</label>
             <select 

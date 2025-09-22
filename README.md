@@ -11,7 +11,7 @@ inicia el json-server
 
 ## terminal 2: front
 ```pws
-cd backend
+cd frontend
 npm run dev
 ```
 inicia el backend

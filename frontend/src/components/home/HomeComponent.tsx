@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./HomeComponent.css";
-import Form from "./Form";
+import Form from "../form/Form";
 import PostsList from "./PostsList";
 
 const HomeComponent = () => {

@@ -6,11 +6,12 @@ import axios from "axios";
 
 const PostsList = () => {
     const [posts, setPosts] = useState<Post[]>([]);
-    const [tags, setTags] = useState<string[]>([]);
+    const [tags, setTags] = useState<{id: number, name: string}[]>([]);
     const [tagExpanded, setTagExpanded] = useState(false);
     const [tagFilter, setTagFilter] = useState<string | null>(null);
     const [availabilityExpanded, setAvailabilityExpanded] = useState(false);
     const [availabilityFilter, setAvailabilityFilter] = useState<boolean | null>(null);
+    const states = [{id: 1, name: "Cualquier disponibilidad"}, {id: 2, name: "En la U ahora"}];
 
     
     function filteredPosts(postsData: Post[]): Post[] {
@@ -76,7 +77,7 @@ const PostsList = () => {
             {availabilityExpanded && (
               <div className="dropdown">
                 <DropMenu 
-                  data={["En la U ahora"]}
+                  data={states}
                   onSelect={(item : string) => {
                     setAvailabilityFilter(item === "En la U ahora");
                     setAvailabilityExpanded(false);
