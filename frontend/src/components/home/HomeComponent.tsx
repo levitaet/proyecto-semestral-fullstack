@@ -17,7 +17,7 @@ const HomeComponent = () => {
           <button className="btn-primary" type="button" onClick={() => setShowForm(!showForm)}>+ Agregar Producto</button>
           <div className="user-avatar" />
         </header>
-        {showForm ? <Form /> : <PostsList />}
+        {showForm ? <Form goBack={() => setShowForm(false)} /> : <PostsList />}
       </div>
     </div>
   );
