@@ -1,7 +1,7 @@
 {
   "posts": [
     {
-      "id": 0,
+      "id": "0",
       "product_name": "Galletas",
       "price": "$900 c/u",
       "stock": 15,
@@ -13,7 +13,7 @@
       "availability": true
     },
     {
-      "id": 1,
+      "id": "1",
       "product_name": "Anillos, aros y cadenas",
       "price": "Desde $5000",
       "stock": 12,
@@ -25,7 +25,7 @@
       "availability": true
     },
     {
-      "id": 2,
+      "id": "2",
       "product_name": "Arreglo PCs",
       "price": "Consultar",
       "stock": null,
@@ -37,7 +37,7 @@
       "availability": true
     },
     {
-      "id": 3,
+      "id": "3",
       "product_name": "Brownies",
       "price": "$1000",
       "stock": 7,
@@ -49,7 +49,7 @@
       "availability": true
     },
     {
-      "id": 4,
+      "id": "4",
       "product_name": "Cables USB-C",
       "price": "$3000 c/u",
       "stock": 20,
@@ -59,13 +59,76 @@
       "image": "/img/cables.png",
       "post_author": "Diego Soto",
       "availability": false
+    },
+    {
+      "id": "fa5e",
+      "product_name": "Producto comestible disponible",
+      "description": "Producto comestible disponible",
+      "price": "100 pesos",
+      "image": "/img/no-image.png",
+      "tag": "Comida",
+      "location": "Cafeta",
+      "availability": false,
+      "stock": "2",
+      "post_author": "Armando Paredes"
+    },
+    {
+      "id": "fedc",
+      "product_name": "Producto electronica disponible",
+      "description": "Producto electronica disponible",
+      "price": "100 pesos",
+      "image": "/img/no-image.png",
+      "tag": "Electrónica",
+      "location": "851",
+      "availability": true,
+      "stock": "10",
+      "post_author": "Mario Pou"
+    },
+    {
+      "id": "6a3a",
+      "product_name": "Producto electronica disponible",
+      "description": "Producto electronica disponible",
+      "price": "100 pesos",
+      "image": "/img/no-image.png",
+      "tag": "Servicios",
+      "location": "851",
+      "availability": true,
+      "stock": "2",
+      "post_author": "Jeanette Artes"
+    },
+    {
+      "id": "37b0",
+      "product_name": "Joyitass",
+      "description": "Joyitass",
+      "price": "100 pesos",
+      "image": "/img/no-image.png",
+      "tag": "Joyas",
+      "location": "851",
+      "availability": true,
+      "stock": "1",
+      "post_author": "Cryptonium"
     }
   ],
   "tags": [
-    {"id": 1, "name": "Todas"},
-    {"id": 2, "name": "Comida"},
-    {"id": 3, "name": "Joyas"},
-    {"id": 4, "name": "Servicios"},
-    {"id": 5, "name": "Electrónica"}
+    {
+      "id": "1",
+      "name": "Todas"
+    },
+    {
+      "id": "2",
+      "name": "Comida"
+    },
+    {
+      "id": "3",
+      "name": "Joyas"
+    },
+    {
+      "id": "4",
+      "name": "Servicios"
+    },
+    {
+      "id": "5",
+      "name": "Electrónica"
+    }
   ]
 }
