@@ -1,0 +1,162 @@
+.post-card {
+  width: 360px;
+  background: var(--panel);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.post-card_image-wrap {
+  position: relative;
+}
+
+.post-card_image {
+  display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.post-card_tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--muted);
+  color: var(--text-1);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.post-card_status {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(2px);
+  border-radius: 8px;
+  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.post-card_status .status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--disabled);
+}
+
+.post-card_status.is-available .status-dot {
+  background: var(--success);
+}
+
+.post-card_body {
+  padding: 16px 16px 10px 16px;
+  text-align: left;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-card_title {
+  margin: 0 0 4px 0;
+  font-size: 1.25rem;
+  color: var(--text-1);
+  min-height: 30px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-card_desc {
+  margin: 0 0 10px 0;
+  color: var(--text-2);
+  font-size: 0.98rem;
+  min-height: 40px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-card_price-stock {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  height: 24px;
+}
+
+.post-card_price {
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.post-card_price .per-unit {
+  font-weight: 700;
+}
+
+.post-card_stock {
+  font-size: 0.9rem;
+  color: var(--text-3);
+}
+
+.post-card_seller {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  height: 32px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex: 0 0 32px;
+}
+
+.seller-name {
+  font-weight: 600;
+  color: var(--text-2);
+  font-size: 1rem;
+}
+
+.post-card_location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-3);
+  font-size: 0.98rem;
+  margin-bottom: 12px;
+  margin-top: auto;
+  height: 20px;
+}
+
+.post-card_cta {
+  border: 0;
+  border-top: none;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 12px 20px;
+  margin: 0 16px 16px 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  width: calc(100% - 32px);
+  align-self: center;
+}
