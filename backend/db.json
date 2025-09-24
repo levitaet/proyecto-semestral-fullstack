@@ -59,54 +59,6 @@
       "image": "/img/cables.png",
       "post_author": "Diego Soto",
       "availability": false
-    },
-    {
-      "id": "fa5e",
-      "product_name": "Producto comestible disponible",
-      "description": "Producto comestible disponible",
-      "price": "100 pesos",
-      "image": "/img/no-image.png",
-      "tag": "Comida",
-      "location": "Cafeta",
-      "availability": false,
-      "stock": "2",
-      "post_author": "Armando Paredes"
-    },
-    {
-      "id": "fedc",
-      "product_name": "Producto electronica disponible",
-      "description": "Producto electronica disponible",
-      "price": "100 pesos",
-      "image": "/img/no-image.png",
-      "tag": "Electrónica",
-      "location": "851",
-      "availability": true,
-      "stock": "10",
-      "post_author": "Mario Pou"
-    },
-    {
-      "id": "6a3a",
-      "product_name": "Producto electronica disponible",
-      "description": "Producto electronica disponible",
-      "price": "100 pesos",
-      "image": "/img/no-image.png",
-      "tag": "Servicios",
-      "location": "851",
-      "availability": true,
-      "stock": "2",
-      "post_author": "Jeanette Artes"
-    },
-    {
-      "id": "37b0",
-      "product_name": "Joyitass",
-      "description": "Joyitass",
-      "price": "100 pesos",
-      "image": "/img/no-image.png",
-      "tag": "Joyas",
-      "location": "851",
-      "availability": true,
-      "stock": "1",
-      "post_author": "Cryptonium"
     }
   ],
   "tags": [
