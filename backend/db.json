@@ -1,40 +1,134 @@
 {
   "posts": [
     {
-      "id": 1,
+      "id": "0",
       "product_name": "Galletas",
       "price": "$900 c/u",
       "stock": 15,
       "tag": "Comida",
       "description": "Galletas de vainilla con chispas de chocolate.",
       "location": "Biblioteca 850",
-      "image": "../img/galletas.png",
+      "image": "/img/galletas.png",
       "post_author": "Alan Brito",
       "availability": true
     },
     {
-      "id": 2,
+      "id": "1",
       "product_name": "Anillos, aros y cadenas",
       "price": "Desde $5000",
       "stock": 12,
       "tag": "Joyas",
       "description": "Joyas bañadas en oro.",
       "location": "B01 - 851",
-      "image": "../img/joyas.png",
+      "image": "/img/joyas.png",
       "post_author": "Jessica Lagos",
       "availability": true
     },
     {
-      "id": 3,
+      "id": "2",
       "product_name": "Arreglo PCs",
       "price": "Consultar",
       "stock": null,
       "tag": "Servicios",
       "description": "Arreglo laptops o computadores de torre, consultar por precios.",
       "location": null,
-      "image": "../img/computadores.png",
+      "image": "/img/computadores.png",
       "post_author": "Franco Veliz",
       "availability": true
+    },
+    {
+      "id": "3",
+      "product_name": "Brownies",
+      "price": "$1000",
+      "stock": 7,
+      "tag": "Comida",
+      "description": "Brownies de chocolate exquisitos.",
+      "location": "Patio 850",
+      "image": "/img/brownies.png",
+      "post_author": "María Jerez",
+      "availability": true
+    },
+    {
+      "id": "4",
+      "product_name": "Cables USB-C",
+      "price": "$3000 c/u",
+      "stock": 20,
+      "tag": "Electrónica",
+      "description": "Cables USB-C de 1m compatibles con carga rápida.",
+      "location": "Hall Sur 850",
+      "image": "/img/cables.png",
+      "post_author": "Diego Soto",
+      "availability": false
+    },
+    {
+      "id": "fa5e",
+      "product_name": "Producto comestible disponible",
+      "description": "Producto comestible disponible",
+      "price": "100 pesos",
+      "image": "/img/no-image.png",
+      "tag": "Comida",
+      "location": "Cafeta",
+      "availability": false,
+      "stock": "2",
+      "post_author": "Armando Paredes"
+    },
+    {
+      "id": "fedc",
+      "product_name": "Producto electronica disponible",
+      "description": "Producto electronica disponible",
+      "price": "100 pesos",
+      "image": "/img/no-image.png",
+      "tag": "Electrónica",
+      "location": "851",
+      "availability": true,
+      "stock": "10",
+      "post_author": "Mario Pou"
+    },
+    {
+      "id": "6a3a",
+      "product_name": "Producto electronica disponible",
+      "description": "Producto electronica disponible",
+      "price": "100 pesos",
+      "image": "/img/no-image.png",
+      "tag": "Servicios",
+      "location": "851",
+      "availability": true,
+      "stock": "2",
+      "post_author": "Jeanette Artes"
+    },
+    {
+      "id": "37b0",
+      "product_name": "Joyitass",
+      "description": "Joyitass",
+      "price": "100 pesos",
+      "image": "/img/no-image.png",
+      "tag": "Joyas",
+      "location": "851",
+      "availability": true,
+      "stock": "1",
+      "post_author": "Cryptonium"
+    }
+  ],
+  "tags": [
+    {
+      "id": "1",
+      "name": "Todas"
+    },
+    {
+      "id": "2",
+      "name": "Comida"
+    },
+    {
+      "id": "3",
+      "name": "Joyas"
+    },
+    {
+      "id": "4",
+      "name": "Servicios"
+    },
+    {
+      "id": "5",
+      "name": "Electrónica"
     }
   ]
 }
