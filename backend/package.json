@@ -1,16 +1,41 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "description": "Backend FCFMarket",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "json-server --watch db.json --port 3001"
+    "build": "tsc",
+    "test": "cross-env NODE_ENV=test tsx --test tests/**/*.test.ts",
+    "start": "node out/index.js",
+    "dev": "ts-node src/server.ts",
+    "dev:old": "ts-node src/index.ts",
+    "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
-    "json-server": "^1.0.0-beta.3"
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^24.6.0",
+    "@types/supertest": "^6.0.3",
+    "nodemon": "^3.0.0",
+    "supertest": "^7.1.4",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.3",
+    "tsx": "^4.20.5"
   }
 }
