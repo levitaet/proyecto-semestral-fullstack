@@ -4,15 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const config_js_1 = __importDefault(require("../utils/config.js"));
-const url = config_js_1.default.MONGODB_URI;
-const dbName = config_js_1.default.MONGODB_DBNAME;
-mongoose_1.default.set("strictQuery", false);
-if (url) {
-    mongoose_1.default.connect(url, { dbName }).catch((error) => {
-        console.log("error connecting to MongoDB:", error.message);
-    });
-}
 const postSchema = new mongoose_1.default.Schema({
     product_id: { type: String, required: true },
     author_id: { type: Number },
