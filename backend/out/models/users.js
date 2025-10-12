@@ -7,9 +7,13 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const userSchema = new mongoose_1.default.Schema({
     username: { type: String, required: true },
     email: { type: String, required: true },
-    password: { type: String, required: true },
-    // createdAt: { type: Date, default: Date.now },
-    // updatedAt: { type: Date, default: Date.now },
+    passwordHash: { type: String, required: true },
+    posts: [
+        {
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "Post",
+        },
+    ],
 }, {
     timestamps: true
 });
