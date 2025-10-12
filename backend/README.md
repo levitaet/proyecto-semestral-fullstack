@@ -5,6 +5,7 @@ backend/
 └── src/
     ├── controllers/
     ├── middleware/
+    └── models/
     └── utils/
         ├── config.ts
         └── logger.ts
