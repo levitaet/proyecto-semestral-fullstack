@@ -107,6 +107,18 @@
       "availability": true,
       "stock": "1",
       "post_author": "Cryptonium"
+    },
+    {
+      "id": "cf06",
+      "product_name": "Producto comestible disponible",
+      "description": "aa",
+      "price": "100 pesos",
+      "image": "/img/no-image.png",
+      "tag": "Servicios",
+      "location": "851",
+      "availability": true,
+      "stock": "1",
+      "post_author": "gloinks store"
     }
   ],
   "tags": [
