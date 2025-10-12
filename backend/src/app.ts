@@ -2,6 +2,10 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import config from "./utils/config";
+import middleware from "./middleware/middleware";
+import userRouter from "./controllers/userController";
+import productRouter from "./controllers/productController";
+import postsRouter from "./controllers/postController";
 
 const app = express();
 
@@ -12,5 +16,16 @@ if (config.MONGODB_URI) {
   });
 }
 
+app.use(cors());
+app.use(express.static("out"));
+app.use(express.json());
 
+app.use("/api/users", userRouter);
+app.use("/api/products", productRouter);
+app.use("/api/posts", postsRouter);
+
+
+
+app.use(middleware.requestLogger);
+app.use(middleware.errorHandler);
 export default app;
