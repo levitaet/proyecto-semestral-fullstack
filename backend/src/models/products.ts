@@ -6,6 +6,7 @@ export interface Product {
   description: string
   price: string
   id_author?: number
+  images: string[]
 }
 
 
@@ -17,6 +18,7 @@ export interface MongooseProduct {
   description: string
   price: string
   id_author?: number
+  images: string[]
 }
 
 const productSchema = new mongoose.Schema<Product>({
@@ -24,6 +26,7 @@ const productSchema = new mongoose.Schema<Product>({
   description: { type: String, required: true },
   price: { type: String, required: true },
   id_author: { type: Number },
+  images: { type: [String], default: [] },
 }, { 
   timestamps: true 
 }); 
