@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { DropMenu } from "./DropMenu";
 import axios from "axios";
 
-const PostsList = () => {
+interface PostsListProps {
+  onPostClick?: (id: number) => void;
+}
+
+const PostsList = ({ onPostClick }: PostsListProps) => {
     const [posts, setPosts] = useState<Post[]>([]);
     const [tags, setTags] = useState<{id: number, name: string}[]>([]);
     const [tagExpanded, setTagExpanded] = useState(false);
@@ -90,7 +94,7 @@ const PostsList = () => {
 
         <main className="home_grid">
           {posts.map((post) => (
-            <PostComponent key={post.id} {...post} />
+            <PostComponent key={post.id} {...post} onPostClick={onPostClick}/>
           ))}
         </main>
         </div>

@@ -11,6 +11,7 @@ interface PostComponentProps {
   stock: number | null;
   post_author: string;
   id: number;
+  onPostClick?: (id: number) => void;
 }
 
 const PostComponent = ({
@@ -23,7 +24,16 @@ const PostComponent = ({
   availability,
   stock,
   post_author,
+  id,
+  onPostClick
 }: PostComponentProps) => {
+
+  const handleClick = () => {
+    if (onPostClick) {
+      onPostClick(id);
+    }
+  };
+
   return (
     <article className="post-card">
       <div className="post-card_image-wrap">
@@ -67,7 +77,7 @@ const PostComponent = ({
           <span>{location ?? "Contactar"}</span>
         </div>
       </div>
-      <button type="button" className="post-card_cta">
+      <button type="button" className="post-card_cta" onClick={handleClick}>
         Ver Detalles
       </button>
     </article>

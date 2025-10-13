@@ -2,9 +2,20 @@ import { useState } from "react";
 import "./HomeComponent.css";
 import Form from "../form/Form";
 import PostsList from "./PostsList";
+import PostDetail from "../post/PostDetail";
 
 const HomeComponent = () => {
   const [showForm, setShowForm] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+
+  const handlePostClick = (id: number) => {
+    setSelectedPostId(id);
+  };
+
+  const handleGoBack = () => {
+    setSelectedPostId(null);
+    setShowForm(false);
+  };
 
   return (
     <div className="home">
@@ -17,7 +28,15 @@ const HomeComponent = () => {
           <button className="btn-primary" type="button" onClick={() => setShowForm(!showForm)}>+ Agregar Producto</button>
           <div className="user-avatar" />
         </header>
-        {showForm ? <Form goBack={() => setShowForm(false)} /> : <PostsList />}
+
+        {selectedPostId ? (
+          <PostDetail postId={selectedPostId} onGoBack={handleGoBack} />
+        ) : showForm ? (
+          <Form goBack={() => setShowForm(false)} />
+        ) : (
+          <PostsList onPostClick={handlePostClick} />
+        )}
+
       </div>
     </div>
   );
