@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 interface Post {
   id: string;
   product_id: string;
-  author_id?: string;
+  author_id: string;
   createdAt: Date;
   updatedAt: Date;
   tag: string;
@@ -19,7 +19,7 @@ export interface MongoosePost {
   _id?: mongoose.Types.ObjectId; 
   __v?: number;
   product_id: string;
-  author_id?: string;
+  author_id: string;
   createdAt: Date;
   updatedAt: Date;
   tag: string;
@@ -30,7 +30,7 @@ export interface MongoosePost {
 
 const postSchema = new mongoose.Schema<Post>({
   product_id: { type: String, required: true },
-  author_id: { type: Number },
+  author_id: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   tag: { type: String },
