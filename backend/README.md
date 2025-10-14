@@ -15,7 +15,7 @@ backend/
 └── tests/
 └── uploads/
 ```
-
+para compilar con `npx tsc` y correr con `npm start`
 
 # Modelos
 Los dividiremos en Users, Products y Posts, siendo posts la publicacion que contempla a un producto ofrecido por un usuario

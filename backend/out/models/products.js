@@ -8,7 +8,7 @@ const productSchema = new mongoose_1.default.Schema({
     product_name: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: String, required: true },
-    id_author: { type: Number },
+    id_author: { type: String, required: true },
     images: { type: [String], default: [] },
 }, {
     timestamps: true

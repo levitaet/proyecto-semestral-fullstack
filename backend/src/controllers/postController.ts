@@ -39,4 +39,15 @@ router.post("/", async (request, response) => {
     });
 });
 
+// Usar con precaución, elimina todos los posts
+router.delete("/all", async (req, res) => {
+  try {
+    await PostModel.deleteMany({});
+    res.status(200).json({ message: "Todos los posts fueron eliminados correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al eliminar los posts" });
+  }
+});
+
 export default router
