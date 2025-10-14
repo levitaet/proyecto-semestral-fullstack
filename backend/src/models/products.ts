@@ -1,12 +1,12 @@
 import mongoose from 'mongoose'
 
 export interface Product {
-  id: string
-  product_name: string
-  description: string
-  price: string
-  id_author?: number
-  images: string[]
+  id: string;
+  product_name: string;
+  description: string;
+  price: string;
+  id_author: string;
+  images: string[];
 }
 
 
@@ -14,18 +14,18 @@ export interface MongooseProduct {
   id?: string; 
   _id?: mongoose.Types.ObjectId; 
   __v?: number;
-  product_name: string
-  description: string
-  price: string
-  id_author?: number
-  images: string[]
+  product_name: string;
+  description: string;
+  price: string;
+  id_author: string;
+  images: string[];
 }
 
 const productSchema = new mongoose.Schema<Product>({
   product_name: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: String, required: true },
-  id_author: { type: Number },
+  id_author: { type: String, required: true },
   images: { type: [String], default: [] },
 }, { 
   timestamps: true 
