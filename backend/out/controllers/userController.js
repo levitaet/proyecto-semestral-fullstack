@@ -40,4 +40,14 @@ router.post("/", (request, response) => __awaiter(void 0, void 0, void 0, functi
     }
     ;
 }));
+router.delete("/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield users_1.default.deleteMany({});
+        res.status(200).json({ message: "Todos los usuarios fueron eliminados correctamente" });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al eliminar los usuarios" });
+    }
+}));
 exports.default = router;
