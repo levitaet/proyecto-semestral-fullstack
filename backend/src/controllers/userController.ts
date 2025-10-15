@@ -12,6 +12,15 @@ router.get("/", (request, response) => {
   });
 });
 
+router.get("/:id", async (request, response) => {
+  const { id } = request.params;
+  const user: MongooseUser | null = await UserModel.findById<MongooseUser>(id);
+  if (!user) {
+    return response.status(404).json({ error: "User not found" });
+  }
+  response.json(user);
+});
+
 router.post("/", async (request, response) => {
   const { username, email, password } = request.body;
 
@@ -25,7 +34,9 @@ router.post("/", async (request, response) => {
     email,
     passwordHash
   });
-
+  if (!username || !email || !password) {
+    return response.status(400).json({ error: "Missing required fields" });
+  }
   if(emailRegex.test(email)) {
     const savedUser = await user.save();
     
