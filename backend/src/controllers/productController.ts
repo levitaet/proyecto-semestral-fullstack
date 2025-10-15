@@ -17,13 +17,23 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/", upload.array("images", 5), async (request, response) => {
+router.get("/", async (request, response) => {
   ProductModel.find<MongooseProduct>({}).then((products) => {
     response.json(products);
   });
 });
 
-router.post("/", async (request, response) => {
+router.get("/:id", async (request, response) => {
+  const { id } = request.params;
+  const product: MongooseProduct | null = await ProductModel.findById<MongooseProduct>(id);
+  if (!product) {
+    return response.status(404).json({ error: "Product not found" });
+  }
+  response.json(product);
+});
+
+
+router.post("/", upload.array("images", 5), async (request, response) => {
   const { product_name, description, price, id_author } = request.body;
   if (!product_name || !description || !price) {
     return response.status(400).json({ error: "Missing required fields" });

@@ -1,7 +1,6 @@
 import mongoose from 'mongoose'
 
 export interface Product {
-  id: string;
   product_name: string;
   description: string;
   price: string;
@@ -10,15 +9,10 @@ export interface Product {
 }
 
 
-export interface MongooseProduct { 
+export interface MongooseProduct extends Product { 
   id?: string; 
   _id?: mongoose.Types.ObjectId; 
   __v?: number;
-  product_name: string;
-  description: string;
-  price: string;
-  id_author: string;
-  images: string[];
 }
 
 const productSchema = new mongoose.Schema<Product>({
@@ -31,8 +25,6 @@ const productSchema = new mongoose.Schema<Product>({
   timestamps: true 
 }); 
 
-const ProductModel = mongoose.model<Product>("Product", productSchema);
-
 productSchema.set("toJSON", {
   transform: (
     _,
@@ -43,5 +35,8 @@ productSchema.set("toJSON", {
     delete returnedObject.__v;
   },
 });
+
+const ProductModel = mongoose.model<Product>("Product", productSchema);
+
 
 export default ProductModel;
