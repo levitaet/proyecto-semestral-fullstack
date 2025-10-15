@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 
 
 export interface User {
-  id: string;
   username: string;
   email: string;
   passwordHash: string;
@@ -10,14 +9,10 @@ export interface User {
 }
 
 
-export interface MongooseUser { 
+export interface MongooseUser extends User { 
   id?: string; 
   _id?: mongoose.Types.ObjectId; 
   __v?: number;
-  username: string;
-  email: string;
-  passwordHash: string;
-  posts: mongoose.Types.ObjectId[];
 }
 
 const userSchema = new mongoose.Schema<User>({
@@ -34,8 +29,6 @@ const userSchema = new mongoose.Schema<User>({
   timestamps: true 
 }); 
 
-const UserModel = mongoose.model<User>("User", userSchema);
-
 userSchema.set("toJSON", {
   transform: (
     _,
@@ -46,5 +39,7 @@ userSchema.set("toJSON", {
     delete returnedObject.__v;
   },
 });
+
+const UserModel = mongoose.model<User>("User", userSchema);
 
 export default UserModel;
