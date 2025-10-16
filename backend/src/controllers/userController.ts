@@ -29,14 +29,16 @@ router.post("/", async (request, response) => {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  if (!username || !email || !password) {
+    return response.status(400).json({ error: "Missing required fields" });
+  }
+
   const user = new UserModel({
     username,
     email,
     passwordHash
   });
-  if (!username || !email || !password) {
-    return response.status(400).json({ error: "Missing required fields" });
-  }
+  
   if(emailRegex.test(email)) {
     const savedUser = await user.save();
     
