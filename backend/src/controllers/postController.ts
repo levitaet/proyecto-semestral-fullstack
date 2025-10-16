@@ -14,7 +14,7 @@ router.get("/", (request, response) => {
 router.post("/", async (request, response) => {
   const { product_id, author_id, createdAt, updatedAt, tag, location, availability, stock } = request.body;
   
-  if (!product_id || !location) {
+  if (!product_id || !location || !author_id) {
     return response.status(400).json({ error: "Missing required fields" });
   }
   

@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import config from "../utils/config";
 
 const requestLogger = (
   request: Request,
@@ -45,4 +47,34 @@ const errorHandler = (
   response.status(500).json({ error: "Error interno del servidor" });
 };
 
-export default { requestLogger, errorHandler };
+
+export const withUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const authReq = req as Request & { userId?: string };
+    const token = req.cookies?.token;
+    if (!token) {
+      res.status(401).json({ error: "missing token" });
+    } else {
+      const decodedToken = jwt.verify(token, config.JWT_SECRET) as any;
+      const csrfToken = req.headers["x-csrf-token"];
+      if (
+        typeof decodedToken === "object" &&
+        decodedToken.id &&
+        decodedToken.csrf == csrfToken
+      ) {
+        authReq.userId = decodedToken.id;
+        next();
+      } else {
+        res.status(401).json({ error: "invalid token" });
+      }
+    }
+  } catch (error) {
+    res.status(401).json({ error: "invalid token" });
+  }
+};
+
+export default { requestLogger, errorHandler, withUser };
