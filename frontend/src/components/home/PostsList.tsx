@@ -31,13 +31,13 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:3001/tags").then((response) => {
+        axios.get("http://localhost:3001/api/posts/tags").then((response) => {
         setTags(response.data);
         });
     }, []);
 
     useEffect(() => { 
-        axios.get("http://localhost:3001/posts").then((response) => {
+        axios.get("http://localhost:3001/api/posts").then((response) => {
         setPosts(filteredPosts(response.data));
         });
     }, [tagFilter, availabilityFilter]);
