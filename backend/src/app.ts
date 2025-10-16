@@ -6,6 +6,7 @@ import middleware from "./middleware/middleware";
 import userRouter from "./controllers/userController";
 import productRouter from "./controllers/productController";
 import postsRouter from "./controllers/postController";
+import loginRouter from "./controllers/login";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/posts", postsRouter);
+app.use("/api/login", loginRouter);
 
 
 
