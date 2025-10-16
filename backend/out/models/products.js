@@ -13,7 +13,6 @@ const productSchema = new mongoose_1.default.Schema({
 }, {
     timestamps: true
 });
-const ProductModel = mongoose_1.default.model("Product", productSchema);
 productSchema.set("toJSON", {
     transform: (_, returnedObject) => {
         var _a;
@@ -22,4 +21,5 @@ productSchema.set("toJSON", {
         delete returnedObject.__v;
     },
 });
+const ProductModel = mongoose_1.default.model("Product", productSchema);
 exports.default = ProductModel;

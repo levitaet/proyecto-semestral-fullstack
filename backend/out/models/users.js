@@ -17,7 +17,6 @@ const userSchema = new mongoose_1.default.Schema({
 }, {
     timestamps: true
 });
-const UserModel = mongoose_1.default.model("User", userSchema);
 userSchema.set("toJSON", {
     transform: (_, returnedObject) => {
         var _a;
@@ -26,4 +25,5 @@ userSchema.set("toJSON", {
         delete returnedObject.__v;
     },
 });
+const UserModel = mongoose_1.default.model("User", userSchema);
 exports.default = UserModel;

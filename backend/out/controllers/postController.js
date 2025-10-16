@@ -22,7 +22,7 @@ router.get("/", (request, response) => {
 });
 router.post("/", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const { product_id, author_id, createdAt, updatedAt, tag, location, availability, stock } = request.body;
-    if (!product_id || !location) {
+    if (!product_id || !location || !author_id) {
         return response.status(400).json({ error: "Missing required fields" });
     }
     const post = new posts_1.default({
@@ -43,5 +43,16 @@ router.post("/", (request, response) => __awaiter(void 0, void 0, void 0, functi
         console.error('Error saving post:', error);
         response.status(500).json({ error: 'An error occurred while saving the post.' });
     });
+}));
+// Usar con precaución, elimina todos los posts
+router.delete("/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield posts_1.default.deleteMany({});
+        res.status(200).json({ message: "Todos los posts fueron eliminados correctamente" });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al eliminar los posts" });
+    }
 }));
 exports.default = router;

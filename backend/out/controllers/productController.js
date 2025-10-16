@@ -25,12 +25,20 @@ const storage = multer_1.default.diskStorage({
     }
 });
 const upload = (0, multer_1.default)({ storage: storage });
-router.get("/", upload.array("images", 5), (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     products_1.default.find({}).then((products) => {
         response.json(products);
     });
 }));
-router.post("/", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = request.params;
+    const product = yield products_1.default.findById(id);
+    if (!product) {
+        return response.status(404).json({ error: "Product not found" });
+    }
+    response.json(product);
+}));
+router.post("/", upload.array("images", 5), (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const { product_name, description, price, id_author } = request.body;
     if (!product_name || !description || !price) {
         return response.status(400).json({ error: "Missing required fields" });
@@ -51,6 +59,17 @@ router.post("/", (request, response) => __awaiter(void 0, void 0, void 0, functi
     catch (error) {
         console.error('Error saving product:', error);
         response.status(500).json({ error: 'An error occurred while saving the product.' });
+    }
+}));
+// Usar con precaución, elimina todos los productos
+router.delete("/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield products_1.default.deleteMany({});
+        res.status(200).json({ message: "Todos los productos fueron eliminados correctamente" });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al eliminar los productos" });
     }
 }));
 exports.default = router;
