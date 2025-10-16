@@ -18,7 +18,7 @@ backend/
 para compilar con `npx tsc` y correr con `npm start`
 
 # Modelos
-Los dividiremos en Users, Products y Posts, siendo posts la publicacion que contempla a un producto ofrecido por un usuario
+Los dividiremos en Users, Products, Posts y Tags, siendo posts la publicacion que contempla a un producto ofrecido por un usuario, y con ciertas tags para su busqueda.
 
 Un producto tendra un listado de imagenes que se guardaran en la carpeta uploads que podran ser subidas con la libreria `multer`
 
@@ -28,3 +28,4 @@ Se habilitaron los endpoints para obtener el listado de products, users y posts 
 - api/users
 - api/products
 - api/posts
+- api/posts/tags
