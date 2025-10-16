@@ -21,6 +21,14 @@ router.get("/", (request, response) => {
         response.json(users);
     });
 });
+router.get("/:id", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = request.params;
+    const user = yield users_1.default.findById(id);
+    if (!user) {
+        return response.status(404).json({ error: "User not found" });
+    }
+    response.json(user);
+}));
 router.post("/", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, email, password } = request.body;
     const saltRounds = 10;
@@ -31,6 +39,9 @@ router.post("/", (request, response) => __awaiter(void 0, void 0, void 0, functi
         email,
         passwordHash
     });
+    if (!username || !email || !password) {
+        return response.status(400).json({ error: "Missing required fields" });
+    }
     if (emailRegex.test(email)) {
         const savedUser = yield user.save();
         response.status(201).json(savedUser);
@@ -40,6 +51,7 @@ router.post("/", (request, response) => __awaiter(void 0, void 0, void 0, functi
     }
     ;
 }));
+// Usar con precaución, elimina todos los usuarios
 router.delete("/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield users_1.default.deleteMany({});

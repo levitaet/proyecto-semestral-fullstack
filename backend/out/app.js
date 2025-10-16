@@ -11,6 +11,7 @@ const middleware_1 = __importDefault(require("./middleware/middleware"));
 const userController_1 = __importDefault(require("./controllers/userController"));
 const productController_1 = __importDefault(require("./controllers/productController"));
 const postController_1 = __importDefault(require("./controllers/postController"));
+const login_1 = __importDefault(require("./controllers/login"));
 const app = (0, express_1.default)();
 mongoose_1.default.set("strictQuery", false);
 if (config_1.default.MONGODB_URI) {
@@ -24,6 +25,7 @@ app.use(express_1.default.json());
 app.use("/api/users", userController_1.default);
 app.use("/api/products", productController_1.default);
 app.use("/api/posts", postController_1.default);
+app.use("/api/login", login_1.default);
 app.use(middleware_1.default.requestLogger);
 app.use(middleware_1.default.errorHandler);
 exports.default = app;
