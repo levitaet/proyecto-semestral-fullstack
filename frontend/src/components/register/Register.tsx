@@ -1,5 +1,6 @@
 import { useState } from "react";
 import './Register.css';
+import http from "../../api/http";
 
 const Register = (props: { goBack: () => void }) => {
     const clean = {
@@ -32,7 +33,8 @@ const Register = (props: { goBack: () => void }) => {
         }
 
         try {
-            console.log("User registration data:", formData);
+            const response = await http.post("/users", formData);
+            console.log("User registration data:", response.data);
             setMessage("Registro exitoso :)");
             setError(null);
 
