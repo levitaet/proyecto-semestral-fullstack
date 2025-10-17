@@ -2,7 +2,8 @@ import mongoose from 'mongoose'
 
 
 interface Post {
-  id: string;
+  title: string;
+  price: string;
   product_id: string;
   author_id: string;
   createdAt: Date;
@@ -10,25 +11,20 @@ interface Post {
   tag: string;
   location: string;
   availability: boolean;
-  stock?: number;
+  stock: number | null;
+  image: string;
 }
 
 
-export interface MongoosePost { 
+export interface MongoosePost extends Post { 
   id?: string; 
   _id?: mongoose.Types.ObjectId; 
   __v?: number;
-  product_id: string;
-  author_id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  tag: string;
-  location: string;
-  availability: boolean;
-  stock?: number;
 }
 
 const postSchema = new mongoose.Schema<Post>({
+  title: { type: String, required: true },
+  price: { type: String, required: true },
   product_id: { type: String, required: true },
   author_id: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
@@ -36,7 +32,8 @@ const postSchema = new mongoose.Schema<Post>({
   tag: { type: String },
   location: { type: String, required: true },
   availability: { type: Boolean, default: true },
-  stock: { type: Number }
+  stock: { type: Number, default: null },
+  image: { type: String, default: "no-image.png" },
 }, { 
   timestamps: true 
 }); 

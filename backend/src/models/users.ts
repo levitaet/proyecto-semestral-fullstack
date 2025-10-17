@@ -6,6 +6,7 @@ export interface User {
   email: string;
   passwordHash: string;
   posts: mongoose.Types.ObjectId[];
+  products: mongoose.Types.ObjectId[];
 }
 
 
@@ -23,6 +24,12 @@ const userSchema = new mongoose.Schema<User>({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Post",
+    },
+  ],
+  products: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
     },
   ],
 }, { 

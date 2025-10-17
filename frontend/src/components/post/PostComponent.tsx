@@ -1,30 +1,28 @@
 import "./PostComponent.css";
 
 interface PostComponentProps {
-  product_name: string;
-  description: string;
+  id: string;
+  title: string;
   price: string;
-  image: string;
+  product_id: string;
+  author_id: string;
   tag: string;
   location: string;
   availability: boolean;
   stock: number | null;
-  post_author: string;
-  id: number;
-  onPostClick?: (id: number) => void;
+  image: string;
+  onPostClick?: (id: string) => void;
 }
 
 const PostComponent = ({
-  product_name,
-  description,
+  id,
+  title,
   price,
-  image,
   tag,
   location,
   availability,
   stock,
-  post_author,
-  id,
+  image,
   onPostClick
 }: PostComponentProps) => {
 
@@ -37,7 +35,7 @@ const PostComponent = ({
   return (
     <article className="post-card">
       <div className="post-card_image-wrap">
-        <img className="post-card_image" src={image} alt={product_name} />
+        <img className="post-card_image" src={image} alt={title} />
 
         <span className="post-card_tag">{tag}</span>
 
@@ -52,8 +50,8 @@ const PostComponent = ({
       </div>
 
       <div className="post-card_body">
-        <h3 className="post-card_title">{product_name}</h3>
-        <p className="post-card_desc">{description}</p>
+        <h3 className="post-card_title">{title}</h3>
+        {/* <p className="post-card_desc">{description}</p> */}
 
         <div className="post-card_price-stock">
           <div className="post-card_price">
@@ -64,7 +62,8 @@ const PostComponent = ({
 
         <div className="post-card_seller">
           <div className="avatar"/>
-          <div className="seller-name">{post_author}</div>
+          {/* VER AUTOR -> profile (? */}
+          {/* <div className="seller-name">{author_id}</div> */}
         </div>
 
         <div className="post-card_location">

@@ -12,7 +12,6 @@ backend/
         └── logger.ts
     └── app.ts
     └── index.ts
-└── tests/
 └── uploads/
 ```
 para compilar con `npx tsc` y correr con `npm start`

@@ -5,7 +5,7 @@ import type { Post } from "../../types/post";
 
 
 interface PostDetailProps {
-  postId: number;
+  postId: string;
   onGoBack: () => void;
 }
 

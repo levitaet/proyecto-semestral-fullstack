@@ -24,7 +24,7 @@ const Form = (props : {goBack: () => void}) => {
 
     useEffect(() => {
         axios.get("http://localhost:3001/tags").then((response) => {
-        const tagNames = response.data.map((t: {id: number, name: string}) => t.name);
+        const tagNames = response.data.map((t: {id: a, name: string}) => t.name);
         setTags(tagNames);
         });
     }, []);
