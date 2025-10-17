@@ -1,6 +1,7 @@
 import "./HomeComponent.css";
+import type { Tag } from "../../types/post";
 
-const DropMenu = (props: { data: {id: number, name: string}[]; onSelect: (item: string) => void; }) => {
+const DropMenu = (props: { data: Tag[]; onSelect: (item: string) => void; }) => {
     return (
         <div>
             {props.data.map((item, index) => (

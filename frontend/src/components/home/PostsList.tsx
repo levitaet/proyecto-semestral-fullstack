@@ -1,21 +1,21 @@
 import PostComponent from '../post/PostComponent';
-import type { Post } from '../../types/post';
+import type { Post, Tag } from '../../types/post';
 import { useEffect, useState } from "react";
 import { DropMenu } from "./DropMenu";
-import axios from "axios";
+import http from '../../api/http';
 
 interface PostsListProps {
-  onPostClick?: (id: number) => void;
+  onPostClick?: (id: string) => void;
 }
 
 const PostsList = ({ onPostClick }: PostsListProps) => {
     const [posts, setPosts] = useState<Post[]>([]);
-    const [tags, setTags] = useState<{id: number, name: string}[]>([]);
+    const [tags, setTags] = useState<Tag[]>([]);
     const [tagExpanded, setTagExpanded] = useState(false);
     const [tagFilter, setTagFilter] = useState<string | null>(null);
     const [availabilityExpanded, setAvailabilityExpanded] = useState(false);
     const [availabilityFilter, setAvailabilityFilter] = useState<boolean | null>(null);
-    const states = [{id: 1, name: "Cualquier disponibilidad"}, {id: 2, name: "En la U ahora"}];
+    const states = [{id: "1", name: "Cualquier disponibilidad"}, {id: "2", name: "En la U ahora"}];
 
     
     function filteredPosts(postsData: Post[]): Post[] {
@@ -31,13 +31,13 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:3001/api/posts/tags").then((response) => {
+        http.get("/posts/tags").then((response) => {
         setTags(response.data);
         });
     }, []);
 
-    useEffect(() => { 
-        axios.get("http://localhost:3001/api/posts").then((response) => {
+    useEffect(() => {
+        http.get("/posts").then((response) => {
         setPosts(filteredPosts(response.data));
         });
     }, [tagFilter, availabilityFilter]);

@@ -13,8 +13,6 @@ export interface MongooseTags extends Tags {
 
 const TagsSchema = new mongoose.Schema<Tags>({
   name: { type: String, required: true }
-}, { 
-  timestamps: true 
 }); 
 
 TagsSchema.set("toJSON", {
