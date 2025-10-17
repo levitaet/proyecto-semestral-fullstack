@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import './Form.css';
+import type { Tag } from "../../types/post";
+import http from "../../api/http";
 // import { ImageUpload } from "./ImageUpload";
 
 const Form = (props : {goBack: () => void}) => {
@@ -23,8 +24,8 @@ const Form = (props : {goBack: () => void}) => {
     const [showForm, setShowForm] = useState(true);
 
     useEffect(() => {
-        axios.get("http://localhost:3001/tags").then((response) => {
-        const tagNames = response.data.map((t: {id: a, name: string}) => t.name);
+        http.get("/posts/tags").then((response) => {
+        const tagNames = response.data.map((t: Tag) => t.name);
         setTags(tagNames);
         });
     }, []);
@@ -47,7 +48,7 @@ const Form = (props : {goBack: () => void}) => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3001/posts", formData);
+            const response = await http.post("/posts", formData);
             console.log("Product added:", response.data);
             setMessage("Producto agregado correctamente :)");
             setError(null);
