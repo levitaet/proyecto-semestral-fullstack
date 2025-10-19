@@ -122,7 +122,7 @@ const Form = (props : {goBack: () => void}) => {
                         type="number" 
                         id="price" 
                         name="price" 
-                        value={formData.price}
+                        value={formData.price === 0 ? "" : formData.price}
                         onChange={handleChange}
                         required 
                     />

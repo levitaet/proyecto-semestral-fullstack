@@ -20,27 +20,41 @@ const HomeComponent = () => {
     setShowRegister(false);
   };
 
+  const handleShowForm = () => {
+    setSelectedPostId(null);
+    setShowRegister(false);
+    setShowForm(true);
+  };
+
+  const handleShowRegister = () => {
+    setSelectedPostId(null);
+    setShowForm(false);
+    setShowRegister(true);
+  };
+
   return (
     <div className="home">
       <div className="home_container">
         <header className="home_topbar">
           <div className="brand">
             <img src="/icon.svg" className="brand_avatar" alt="logo" />
-            <span className="brand_name">FCFMarket</span>
+            <button className="brand_name-btn" type="button" onClick={handleGoBack}>
+              <span className="brand_name">FCFMarket</span>
+            </button>
           </div>
 
           <div className="header-buttons">
             <button 
               className="btn-primary" 
               type="button" 
-              onClick={() => setShowRegister(!showRegister)}
+              onClick={handleShowRegister}
             >
               Registrarse
             </button>
             <button 
               className="btn-primary" 
               type="button" 
-              onClick={() => setShowForm(!showForm)}
+              onClick={handleShowForm}
             >
               + Agregar Producto
             </button>
