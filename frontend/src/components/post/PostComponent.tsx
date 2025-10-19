@@ -17,6 +17,7 @@ interface PostComponentProps {
 
 const PostComponent = ({
   id,
+  title,
   product_name,
   price,
   category,
@@ -33,7 +34,7 @@ const PostComponent = ({
     }
   };
 
-  const mainImage = images.length > 0 ? images[0] : "/img/no-image.png";
+  const mainImage = images.length > 0 ? images[0] : "/img/brownies.png";
 
   return (
     <article className="post-card">
@@ -53,7 +54,7 @@ const PostComponent = ({
       </div>
 
       <div className="post-card_body">
-        <h3 className="post-card_title">{product_name}</h3>
+        <h3 className="post-card_title">{title}</h3>
 
         <div className="post-card_price-stock">
           <div className="post-card_price">

@@ -21,7 +21,7 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
     return <div>Cargando...</div>; 
   }
 
-  const mainImage = post.images.length > 0 ? post.images[0] : "/img/no-image.png";
+  const mainImage = post.images.length > 0 ? post.images[0] : "/img/brownies.png";
 
   return (
     <div className="post-detail">
@@ -39,9 +39,7 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
             />
             <div className="post-detail_badges">
               <span className="post-detail_tag">{post.category}</span>
-              {post.tags.map((tag, index) => (
-                <span key={index} className="post-detail_tag post-detail_tag--secondary">{tag}</span>
-              ))}
+
               <span
                 className={`post-detail_status ${
                   post.availability ? "is-available" : "is-unavailable"
@@ -55,8 +53,7 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
 
           <div className="post-detail_content">
             <header className="post-detail_header">
-              <h1 className="post-detail_title">{post.title}</h1>
-              <h2 className="post-detail_product-name">{post.product_name}</h2>
+              <h1 className="post-detail_title">{post.product_name}</h1>
               <div className="post-detail_price">${post.price.toLocaleString('es-CL')}</div>
             </header>
 
@@ -81,6 +78,11 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
                   alt="ubicacion"
                 />
                 <span><strong>Ubicación:</strong> {post.location}</span>
+              </div>
+              <div className="post-detail_tags"  style={{display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px'}}>
+              {post.tags.map((tag, index) => (
+                <span key={index} className="post-detail_tag post-detail_tag--secondary">{tag}</span>
+              ))}
               </div>
             </div>
 
