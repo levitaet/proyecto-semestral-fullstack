@@ -1,6 +1,6 @@
 import { useState } from "react";
 import './Register.css';
-import http from "../../api/http";
+import { usersService } from "../../api";
 
 const Register = (props: { goBack: () => void }) => {
     const clean = {
@@ -33,8 +33,11 @@ const Register = (props: { goBack: () => void }) => {
         }
 
         try {
-            const response = await http.post("/users", formData);
-            console.log("User registration data:", response.data);
+            await usersService.register({
+                username: formData.username,
+                email: formData.email,
+                password: formData.password
+            });
             setMessage("Registro exitoso :)");
             setError(null);
 
@@ -100,20 +103,14 @@ const Register = (props: { goBack: () => void }) => {
                 ) 
                 : (
                     <div>
+                        <p className="success-message">{message}</p>
                         <button className="btn-primary" type="button" onClick={props.goBack}>
-                            Volver
+                            Ir al inicio
                         </button>
-                        <button className="btn-primary" type="button" onClick={() => {
-                            setFormData(clean);
-                            setShowForm(true);
-                        }}>
-                            Registrar otro usuario
-                        </button>
-                        {message && <p className="success-message">{message}</p>}
                     </div>
                 )
             }
-
+            
             {error && <p className="error-message">{error}</p>}
         </div>
     );

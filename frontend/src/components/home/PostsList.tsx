@@ -1,8 +1,8 @@
 import PostComponent from '../post/PostComponent';
-import type { Post, Tag } from '../../types/post';
+import type { Post } from '../../types/post';
 import { useEffect, useState } from "react";
 import { DropMenu } from "./DropMenu";
-import http from '../../api/http';
+import { postsService } from '../../api';
 
 interface PostsListProps {
   onPostClick?: (id: string) => void;
@@ -10,37 +10,39 @@ interface PostsListProps {
 
 const PostsList = ({ onPostClick }: PostsListProps) => {
     const [posts, setPosts] = useState<Post[]>([]);
-    const [tags, setTags] = useState<Tag[]>([]);
-    const [tagExpanded, setTagExpanded] = useState(false);
-    const [tagFilter, setTagFilter] = useState<string | null>(null);
+    const [allPosts, setAllPosts] = useState<Post[]>([]);
+    const [categories, setCategories] = useState<string[]>([]);
+    const [categoryExpanded, setCategoryExpanded] = useState(false);
+    const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
     const [availabilityExpanded, setAvailabilityExpanded] = useState(false);
     const [availabilityFilter, setAvailabilityFilter] = useState<boolean | null>(null);
-    const states = [{id: "1", name: "Cualquier disponibilidad"}, {id: "2", name: "En la U ahora"}];
-
-    
-    function filteredPosts(postsData: Post[]): Post[] {
-        return postsData.filter((post) => {
-            if (tagFilter && tagFilter !== "Todas" && post.tag !== tagFilter) {
-                return false;
-            }
-            if (availabilityFilter && post.availability !== availabilityFilter) {
-                return false;
-            }
-            return true;
-        });
-    };
+    const states = ["Cualquier disponibilidad", "En la U ahora"];
 
     useEffect(() => {
-        http.get("/posts/tags").then((response) => {
-        setTags(response.data);
+        postsService.getCategories().then((categories) => {
+            setCategories(["Todas", ...categories]);
         });
     }, []);
 
     useEffect(() => {
-        http.get("/posts").then((response) => {
-        setPosts(filteredPosts(response.data));
+        postsService.getAll().then((posts) => {
+            setAllPosts(posts);
+            setPosts(posts);
         });
-    }, [tagFilter, availabilityFilter]);
+    }, []);
+
+    useEffect(() => {
+        const filtered = allPosts.filter((post) => {
+            if (categoryFilter && categoryFilter !== "Todas" && post.category !== categoryFilter) {
+                return false;
+            }
+            if (availabilityFilter !== null && post.availability !== availabilityFilter) {
+                return false;
+            }
+            return true;
+        });
+        setPosts(filtered);
+    }, [categoryFilter, availabilityFilter, allPosts]);
 
     return (
         <div>
@@ -52,18 +54,18 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
 
           <div className="filter-group">
             <button type="button" className="filter-btn" onClick={() => {
-              setTagExpanded(!tagExpanded);
+              setCategoryExpanded(!categoryExpanded);
             }}>
-              <span>{tagFilter || "Todas"}</span>
+              <span>{categoryFilter || "Todas"}</span>
               <span className="chevron">▾</span>
             </button>
-            {tagExpanded && (
+            {categoryExpanded && (
               <div className="dropdown">
                 <DropMenu 
-                  data={tags}
+                  data={categories}
                   onSelect={(item : string) => {
-                    setTagFilter(item);
-                    setTagExpanded(false);
+                    setCategoryFilter(item === "Todas" ? null : item);
+                    setCategoryExpanded(false);
                   }}
                 />
               </div>
@@ -82,7 +84,7 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
                 <DropMenu 
                   data={states}
                   onSelect={(item : string) => {
-                    setAvailabilityFilter(item === "En la U ahora");
+                    setAvailabilityFilter(item === "En la U ahora" ? true : null);
                     setAvailabilityExpanded(false);
                   }}
                 />

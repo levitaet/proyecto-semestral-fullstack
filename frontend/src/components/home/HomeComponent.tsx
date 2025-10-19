@@ -8,9 +8,9 @@ import Register from "../register/Register";
 const HomeComponent = () => {
   const [showForm, setShowForm] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
-  const handlePostClick = (id: number) => {
+  const handlePostClick = (id: string) => {
     setSelectedPostId(id);
   };
 
