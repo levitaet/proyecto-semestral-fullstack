@@ -1,35 +1,47 @@
 import "./PostComponent.css";
 
 interface PostComponentProps {
+  id: string;
+  title: string;
   product_name: string;
-  description: string;
-  price: string;
-  image: string;
-  tag: string;
+  price: number;
+  author_name: string;
+  tags: string[];
+  category: string;
   location: string;
   availability: boolean;
   stock: number | null;
-  post_author: string;
-  id: number;
+  images: string[];
+  onPostClick?: (id: string) => void;
 }
 
 const PostComponent = ({
+  id,
+  title,
   product_name,
-  description,
   price,
-  image,
-  tag,
+  category,
   location,
   availability,
   stock,
-  post_author,
+  images,
+  onPostClick
 }: PostComponentProps) => {
+
+  const handleClick = () => {
+    if (onPostClick) {
+      onPostClick(id);
+    }
+  };
+
+  const mainImage = images.length > 0 ? images[0] : "/img/brownies.png";
+
   return (
     <article className="post-card">
       <div className="post-card_image-wrap">
-        <img className="post-card_image" src={image} alt={product_name} />
+        <img className="post-card_image" src={mainImage} alt={product_name} />
 
-        <span className="post-card_tag">{tag}</span>
+        <span className="post-card_tag">{category}</span>
 
         <span
           className={`post-card_status ${
@@ -37,24 +49,22 @@ const PostComponent = ({
           }`}
         >
           <span className="status-dot"/>
-          En la U
+          {availability ? "En la U" : "No disponible"}
         </span>
       </div>
 
       <div className="post-card_body">
-        <h3 className="post-card_title">{product_name}</h3>
-        <p className="post-card_desc">{description}</p>
+        <h3 className="post-card_title">{title}</h3>
 
         <div className="post-card_price-stock">
           <div className="post-card_price">
-            {price}
+            ${price.toLocaleString('es-CL')}
           </div>
           <div className="post-card_stock">Stock: {stock ?? "N/A"}</div>
         </div>
 
         <div className="post-card_seller">
           <div className="avatar"/>
-          <div className="seller-name">{post_author}</div>
         </div>
 
         <div className="post-card_location">
@@ -67,7 +77,7 @@ const PostComponent = ({
           <span>{location ?? "Contactar"}</span>
         </div>
       </div>
-      <button type="button" className="post-card_cta">
+      <button type="button" className="post-card_cta" onClick={handleClick}>
         Ver Detalles
       </button>
     </article>

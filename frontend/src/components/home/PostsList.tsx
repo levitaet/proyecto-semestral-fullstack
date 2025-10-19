@@ -2,41 +2,47 @@ import PostComponent from '../post/PostComponent';
 import type { Post } from '../../types/post';
 import { useEffect, useState } from "react";
 import { DropMenu } from "./DropMenu";
-import axios from "axios";
+import { postsService } from '../../api';
 
-const PostsList = () => {
+interface PostsListProps {
+  onPostClick?: (id: string) => void;
+}
+
+const PostsList = ({ onPostClick }: PostsListProps) => {
     const [posts, setPosts] = useState<Post[]>([]);
-    const [tags, setTags] = useState<{id: number, name: string}[]>([]);
-    const [tagExpanded, setTagExpanded] = useState(false);
-    const [tagFilter, setTagFilter] = useState<string | null>(null);
+    const [allPosts, setAllPosts] = useState<Post[]>([]);
+    const [categories, setCategories] = useState<string[]>([]);
+    const [categoryExpanded, setCategoryExpanded] = useState(false);
+    const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
     const [availabilityExpanded, setAvailabilityExpanded] = useState(false);
     const [availabilityFilter, setAvailabilityFilter] = useState<boolean | null>(null);
-    const states = [{id: 1, name: "Cualquier disponibilidad"}, {id: 2, name: "En la U ahora"}];
+    const states = ["Cualquier disponibilidad", "En la U ahora"];
 
-    
-    function filteredPosts(postsData: Post[]): Post[] {
-        return postsData.filter((post) => {
-            if (tagFilter && tagFilter !== "Todas" && post.tag !== tagFilter) {
+    useEffect(() => {
+        postsService.getCategories().then((categories) => {
+            setCategories(["Todas", ...categories]);
+        });
+    }, []);
+
+    useEffect(() => {
+        postsService.getAll().then((posts) => {
+            setAllPosts(posts);
+            setPosts(posts);
+        });
+    }, []);
+
+    useEffect(() => {
+        const filtered = allPosts.filter((post) => {
+            if (categoryFilter && categoryFilter !== "Todas" && post.category !== categoryFilter) {
                 return false;
             }
-            if (availabilityFilter && post.availability !== availabilityFilter) {
+            if (availabilityFilter !== null && post.availability !== availabilityFilter) {
                 return false;
             }
             return true;
         });
-    };
-
-    useEffect(() => {
-        axios.get("http://localhost:3001/tags").then((response) => {
-        setTags(response.data);
-        });
-    }, []);
-
-    useEffect(() => { 
-        axios.get("http://localhost:3001/posts").then((response) => {
-        setPosts(filteredPosts(response.data));
-        });
-    }, [tagFilter, availabilityFilter]);
+        setPosts(filtered);
+    }, [categoryFilter, availabilityFilter, allPosts]);
 
     return (
         <div>
@@ -48,18 +54,18 @@ const PostsList = () => {
 
           <div className="filter-group">
             <button type="button" className="filter-btn" onClick={() => {
-              setTagExpanded(!tagExpanded);
+              setCategoryExpanded(!categoryExpanded);
             }}>
-              <span>{tagFilter || "Todas"}</span>
+              <span>{categoryFilter || "Todas"}</span>
               <span className="chevron">▾</span>
             </button>
-            {tagExpanded && (
+            {categoryExpanded && (
               <div className="dropdown">
                 <DropMenu 
-                  data={tags}
+                  data={categories}
                   onSelect={(item : string) => {
-                    setTagFilter(item);
-                    setTagExpanded(false);
+                    setCategoryFilter(item === "Todas" ? null : item);
+                    setCategoryExpanded(false);
                   }}
                 />
               </div>
@@ -78,7 +84,7 @@ const PostsList = () => {
                 <DropMenu 
                   data={states}
                   onSelect={(item : string) => {
-                    setAvailabilityFilter(item === "En la U ahora");
+                    setAvailabilityFilter(item === "En la U ahora" ? true : null);
                     setAvailabilityExpanded(false);
                   }}
                 />
@@ -90,7 +96,7 @@ const PostsList = () => {
 
         <main className="home_grid">
           {posts.map((post) => (
-            <PostComponent key={post.id} {...post} />
+            <PostComponent key={post.id} {...post} onPostClick={onPostClick}/>
           ))}
         </main>
         </div>
