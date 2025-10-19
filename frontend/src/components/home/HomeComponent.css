@@ -30,6 +30,19 @@
   border-radius: 8px;
   background: transparent;
 }
+
+.brand_name-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.brand_name-btn:hover {
+  opacity: 0.8;
+}
+
 .brand_name { font-weight: 800; color: var(--text-1); font-size: 1.05rem; }
 
 
