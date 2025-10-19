@@ -30,6 +30,19 @@
   border-radius: 8px;
   background: transparent;
 }
+
+.brand_name-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.brand_name-btn:hover {
+  opacity: 0.8;
+}
+
 .brand_name { font-weight: 800; color: var(--text-1); font-size: 1.05rem; }
 
 
@@ -83,4 +96,25 @@
   .home_grid {
     grid-template-columns: 360px;
   }
+}
+.header-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.header-buttons .btn-primary {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.header-buttons .btn-primary:hover {
+  background: #9a5e9e;
 }
