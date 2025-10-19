@@ -1,79 +1,82 @@
 import express from "express"
-import PostModel from '../models/posts';
+import PostModel, { CATEGORIES } from '../models/posts';
 import type { MongoosePost } from  "../models/posts";
-import TagsModel from '../models/tags';
-import type { MongooseTags } from "../models/tags";
-
+import multer from "multer";
 
 const router = express.Router();
 
+const storage = multer.diskStorage({
+  destination: function (_req, _file, cb) {
+    cb(null, "uploads/"); 
+  },
+  filename: function (_req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
+
+// GET todos los posts
 router.get("/", (request, response) => {
   PostModel.find<MongoosePost>({}).then((posts) => {
     response.json(posts);
   });
 });
 
-// GET tags
-router.get("/tags", (request, response) => {
-  TagsModel.find<MongooseTags>({}).then((tags) => {
-    response.json(tags);
-  });
+// GET un post por ID
+router.get("/:id", async (request, response) => {
+  const { id } = request.params;
+  const post: MongoosePost | null = await PostModel.findById<MongoosePost>(id);
+  if (!post) {
+    return response.status(404).json({ error: "Post not found" });
+  }
+  response.json(post);
 });
 
-router.post("/", async (request, response) => {
-  const { product_id, author_id, createdAt, updatedAt, tag, location, availability, stock } = request.body;
+// GET todas las categorías disponibles
+router.get("/api/categories", async (request, response) => {
+  try {
+    response.json(CATEGORIES);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    response.status(500).json({ error: 'An error occurred while fetching categories.' });
+  }
+});
+
+// POST crear un nuevo post
+router.post("/", upload.array("images", 5), async (request, response) => {
+  const { title, product_name, description, price, author_name, tags, category, location, availability, stock } = request.body;
   
-  if (!product_id || !location || !author_id) {
+  if (!title || !product_name || !description || !price || !location || !author_name || !category) {
     return response.status(400).json({ error: "Missing required fields" });
   }
 
-  if (tag) {
-    const existingTag = await TagsModel.findOne({ name: tag });
-    if (!existingTag) {
-      await TagsModel.create({ name: tag });
-    }
-  }
+  const files = Array.isArray(request.files) ? request.files as Express.Multer.File[] : [];
+  const imagePaths = files.map((file) => file.path);
+
+  const parsedTags = typeof tags === 'string' ? JSON.parse(tags) : tags || [];
   
   const post = new PostModel({
-    product_id,
-    author_id,
-    createdAt,
-    updatedAt,
-    tag,
+    title,
+    product_name,
+    description,
+    price: Number(price),
+    author_name,
+    tags: parsedTags,
+    category,
     location,
     availability,
-    stock
+    stock,
+    images: imagePaths
   });
 
-  const savedPost = await post.save()
-    .then((savedPost) => {
-      response.status(201).json(savedPost);
-    })
-    .catch((error) => {
-      console.error('Error saving post:', error);
-      response.status(500).json({ error: 'An error occurred while saving the post.' });
-    });
-});
-
-// POST tag (directamente)
-router.post("/tags", async (request, response) => {
-  const { name } = request.body;
-  if (!name) {
-    return response.status(400).json({ error: "Tag name is required" });
+  try {
+    const savedPost = await post.save();
+    response.status(201).json(savedPost);
+  } catch (error) {
+    console.error('Error saving post:', error);
+    response.status(500).json({ error: 'An error occurred while saving the post.' });
   }
-  const existingTag = await TagsModel.findOne({ name });
-  if (existingTag) {
-    return response.status(400).json({ error: "Tag already exists" });
-  }
-  const tag = new TagsModel({ name });
-  const savedTag = await tag.save()
-    .then((savedTag) => {
-      response.status(201).json(savedTag);
-    })
-    .catch((error) => {
-      console.error('Error saving tag:', error);
-      response.status(500).json({ error: 'An error occurred while saving the tag.' });
-    });
 });
 
 // Usar con precaución, elimina todos los posts

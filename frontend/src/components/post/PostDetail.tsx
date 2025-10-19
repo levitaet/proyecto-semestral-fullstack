@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import "./PostDetail.css";
 import type { Post } from "../../types/post";
-
+import { postsService } from "../../api";
 
 interface PostDetailProps {
   postId: string;
@@ -10,17 +9,19 @@ interface PostDetailProps {
 }
 
 const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
-  const [post, setPost] = useState<Post | null>(null); //para el post que vamos a ver en detalle
+  const [post, setPost] = useState<Post | null>(null);
 
-    useEffect(() => {
-    axios.get(`http://localhost:3001/posts/${postId}`).then((response) => {
-      setPost(response.data);
+  useEffect(() => {
+    postsService.getById(postId).then((post) => {
+      setPost(post);
     });
-    }, [postId]);
+  }, [postId]);
 
   if (!post) {
-    return null; 
+    return <div>Cargando...</div>; 
   }
+
+  const mainImage = post.images.length > 0 ? post.images[0] : "/img/no-image.png";
 
   return (
     <div className="post-detail">
@@ -33,11 +34,14 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
           <div className="post-detail_image-section">
             <img 
               className="post-detail_image" 
-              src={post.image} 
+              src={mainImage} 
               alt={post.product_name} 
             />
             <div className="post-detail_badges">
-              <span className="post-detail_tag">{post.tag}</span>
+              <span className="post-detail_tag">{post.category}</span>
+              {post.tags.map((tag, index) => (
+                <span key={index} className="post-detail_tag post-detail_tag--secondary">{tag}</span>
+              ))}
               <span
                 className={`post-detail_status ${
                   post.availability ? "is-available" : "is-unavailable"
@@ -51,8 +55,9 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
 
           <div className="post-detail_content">
             <header className="post-detail_header">
-              <h1 className="post-detail_title">{post.product_name}</h1>
-              <div className="post-detail_price">{post.price}</div>
+              <h1 className="post-detail_title">{post.title}</h1>
+              <h2 className="post-detail_product-name">{post.product_name}</h2>
+              <div className="post-detail_price">${post.price.toLocaleString('es-CL')}</div>
             </header>
 
             <div className="post-detail_info">
@@ -64,7 +69,7 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
                 <div className="avatar"/>
                 <div className="seller-info">
                   <strong>Vendedor:</strong>
-                  <span>{post.post_author}</span>
+                  <span>{post.author_name}</span>
                 </div>
               </div>
 
@@ -84,6 +89,16 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
               <p>{post.description}</p>
             </div>
 
+            {post.images.length > 1 && (
+              <div className="post-detail_gallery">
+                <h3>Más imágenes</h3>
+                <div className="gallery-grid">
+                  {post.images.slice(1).map((image, index) => (
+                    <img key={index} src={image} alt={`${post.product_name} ${index + 2}`} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </article>
       </div>

@@ -1,20 +1,20 @@
 import mongoose from 'mongoose'
 
-
 interface Post {
   title: string;
-  price: string;
-  product_id: string;
-  author_id: string;
+  product_name: string;
+  description: string;
+  price: number;
+  author_name: string;
   createdAt: Date;
   updatedAt: Date;
-  tag: string;
+  tags: string[];
+  category: string;
   location: string;
   availability: boolean;
   stock: number | null;
-  image: string;
+  images: string[];
 }
-
 
 export interface MongoosePost extends Post { 
   id?: string; 
@@ -22,23 +22,31 @@ export interface MongoosePost extends Post {
   __v?: number;
 }
 
+const CATEGORIES = ['Comida', 'Joyas', 'Servicios', 'Electrónica', 
+  'Artesanias', 'Otros'];
+
 const postSchema = new mongoose.Schema<Post>({
   title: { type: String, required: true },
-  price: { type: String, required: true },
-  product_id: { type: String, required: true },
-  author_id: { type: String, required: true },
+  product_name: { type: String, required: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  author_name: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  tag: { type: String },
+  tags: { type: [String], default: [] },
+  category: { 
+    type: String, 
+    required: true,
+    enum: CATEGORIES,
+    default: 'Otros'
+  },
   location: { type: String, required: true },
   availability: { type: Boolean, default: true },
   stock: { type: Number, default: null },
-  image: { type: String, default: "no-image.png" },
+  images: { type: [String], default: [] },
 }, { 
   timestamps: true 
 }); 
-
-const PostModel = mongoose.model<Post>("Post", postSchema);
 
 postSchema.set("toJSON", {
   transform: (
@@ -51,4 +59,7 @@ postSchema.set("toJSON", {
   },
 });
 
+const PostModel = mongoose.model<Post>("Post", postSchema);
+
+export { CATEGORIES };
 export default PostModel;

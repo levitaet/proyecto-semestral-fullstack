@@ -3,26 +3,27 @@ import "./PostComponent.css";
 interface PostComponentProps {
   id: string;
   title: string;
-  price: string;
-  product_id: string;
-  author_id: string;
-  tag: string;
+  product_name: string;
+  price: number;
+  author_name: string;
+  tags: string[];
+  category: string;
   location: string;
   availability: boolean;
   stock: number | null;
-  image: string;
+  images: string[];
   onPostClick?: (id: string) => void;
 }
 
 const PostComponent = ({
   id,
-  title,
+  product_name,
   price,
-  tag,
+  category,
   location,
   availability,
   stock,
-  image,
+  images,
   onPostClick
 }: PostComponentProps) => {
 
@@ -32,12 +33,14 @@ const PostComponent = ({
     }
   };
 
+  const mainImage = images.length > 0 ? images[0] : "/img/no-image.png";
+
   return (
     <article className="post-card">
       <div className="post-card_image-wrap">
-        <img className="post-card_image" src={image} alt={title} />
+        <img className="post-card_image" src={mainImage} alt={product_name} />
 
-        <span className="post-card_tag">{tag}</span>
+        <span className="post-card_tag">{category}</span>
 
         <span
           className={`post-card_status ${
@@ -45,25 +48,22 @@ const PostComponent = ({
           }`}
         >
           <span className="status-dot"/>
-          En la U
+          {availability ? "En la U" : "No disponible"}
         </span>
       </div>
 
       <div className="post-card_body">
-        <h3 className="post-card_title">{title}</h3>
-        {/* <p className="post-card_desc">{description}</p> */}
+        <h3 className="post-card_title">{product_name}</h3>
 
         <div className="post-card_price-stock">
           <div className="post-card_price">
-            {price}
+            ${price.toLocaleString('es-CL')}
           </div>
           <div className="post-card_stock">Stock: {stock ?? "N/A"}</div>
         </div>
 
         <div className="post-card_seller">
           <div className="avatar"/>
-          {/* VER AUTOR -> profile (? */}
-          {/* <div className="seller-name">{author_id}</div> */}
         </div>
 
         <div className="post-card_location">
