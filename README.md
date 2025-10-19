@@ -8,6 +8,7 @@ Se requieren dos terminales
 ## terminal 1: back
 ```pws
 cd backend
+npm run build
 npm start
 ```
 
@@ -17,6 +18,7 @@ inicia el json-server
 ```pws
 cd frontend
 npm install
-npm run dev
+npm run build
+npm run start
 ```
 inicia el backend
