@@ -12,7 +12,7 @@ npm run build
 npm start
 ```
 
-inicia el json-server
+inicia el server
 
 ## terminal 2: front
 ```pws
