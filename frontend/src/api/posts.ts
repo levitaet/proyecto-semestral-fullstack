@@ -32,8 +32,11 @@ export const postsService = {
     location: string;
     availability: boolean;
     stock: number | null;
+    file?: File | null;
   }): Promise<Post> => {
-    const response = await axiosSecure.post("/posts", postData);
+    const response = await axiosSecure.post("/posts", postData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   },
 

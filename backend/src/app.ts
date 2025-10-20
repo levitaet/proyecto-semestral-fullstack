@@ -6,6 +6,7 @@ import config from "./utils/config";
 import middleware from "./middleware/middleware";
 import userRouter from "./controllers/userController";
 import postsRouter from "./controllers/postController";
+import path from "path";
 import loginRouter from "./controllers/loginController";
 
 const app = express();
@@ -19,7 +20,11 @@ if (config.MONGODB_URI) {
 
 app.use(cors({
   origin: "http://localhost:5173",
-  credentials: true}));
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'X-CSRF-Token'],  
+  exposedHeaders: ['X-CSRF-Token']  
+}));
 app.use(cookieParser());
 app.use(express.static("out"));
 app.use(express.json());
@@ -28,6 +33,8 @@ app.use(middleware.requestLogger);
 app.use("/api/users", userRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/login", loginRouter);
+app.use("/api/uploads", express.static(path.join(__dirname, "../uploads")));
+
 
 app.use(middleware.errorHandler);
 export default app;
