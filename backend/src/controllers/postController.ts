@@ -1,13 +1,15 @@
-import express from "express"
+import express from "express";
 import PostModel, { CATEGORIES } from '../models/posts';
 import type { MongoosePost } from  "../models/posts";
+import BASE_URL from "../utils/config";
+import path from "path";
 import multer from "multer";
 
 const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
-    cb(null, "uploads/"); 
+    cb(null, path.join(__dirname, "../../uploads/"));
   },
   filename: function (_req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
@@ -44,16 +46,17 @@ router.get("/api/categories", async (request, response) => {
 });
 
 // POST crear un nuevo post
-router.post("/", upload.array("images", 5), async (request, response) => {
+router.post("/", upload.single("file"), async (request, response) => {
   const { title, product_name, description, price, author_name, tags, category, location, availability, stock } = request.body;
   
   if (!title || !product_name || !description || !price || !location || !author_name || !category) {
     return response.status(400).json({ error: "Missing required fields" });
   }
 
-  const files = Array.isArray(request.files) ? request.files as Express.Multer.File[] : [];
-  const imagePaths = files.map((file) => file.path);
-
+  const imagePath = request.file
+      ? `/uploads/${request.file.filename}`
+      : `${BASE_URL}/api/uploads/no-image.png`;
+  console.log("Received image file:", request.file);
   const parsedTags = typeof tags === 'string' ? JSON.parse(tags) : tags || [];
   
   const post = new PostModel({
@@ -67,8 +70,10 @@ router.post("/", upload.array("images", 5), async (request, response) => {
     location,
     availability,
     stock,
-    images: imagePaths
+    image: imagePath
   });
+
+  console.log("Saving post with image in path:", imagePath);
 
   try {
     const savedPost = await post.save();
@@ -78,6 +83,40 @@ router.post("/", upload.array("images", 5), async (request, response) => {
     response.status(500).json({ error: 'An error occurred while saving the post.' });
   }
 });
+
+// Upload de imágenes
+// router.post("/api/upload", upload.single("file"), async (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).send({ message: "No se envió ningún archivo" });
+//   }
+
+//   // Guardar info en Mongo (opcional)
+//   const file = new FileModel({
+//     name: req.file.filename,
+//     url: `${BASE_URL}/uploads/${req.file.filename}`,
+//   });
+//   await file.save();
+
+//   res.status(200).send({ message: "Imagen subida correctamente", file });
+// });
+
+// GET todas las imagenes disponibles
+// router.get("/api/uploads", async (request, response) => {
+//   try {
+//     let imagesPaths: string[] = [];
+//     PostModel.find<MongoosePost>({}).then((posts) => {
+//       posts.forEach((post) => {
+//         if (post.image && post.image !== "") {
+//           imagesPaths.push(post.image);
+//         }
+//       });
+//       return response.json(imagesPaths);
+//     });
+//   } catch (error) {
+//     console.error('Error fetching images paths:', error);
+//     response.status(500).json({ error: 'An error occurred while fetching images paths.' });
+//   }
+// });
 
 // Usar con precaución, elimina todos los posts
 router.delete("/all", async (req, res) => {

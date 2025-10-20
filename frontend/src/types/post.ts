@@ -12,5 +12,5 @@ export interface Post {
     location: string;
     availability: boolean;
     stock: number | null;
-    images: string[];
+    image: string;
 }

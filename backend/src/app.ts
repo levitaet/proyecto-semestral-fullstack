@@ -6,6 +6,7 @@ import middleware from "./middleware/middleware";
 import userRouter from "./controllers/userController";
 import postsRouter from "./controllers/postController";
 import loginRouter from "./controllers/login";
+import path from "path";
 
 const app = express();
 
@@ -23,6 +24,8 @@ app.use(express.json());
 app.use("/api/users", userRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/login", loginRouter);
+app.use("/api/uploads", express.static(path.join(__dirname, "../uploads")));
+
 
 app.use(middleware.requestLogger);
 app.use(middleware.errorHandler);

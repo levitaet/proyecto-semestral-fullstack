@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import './Form.css';
 import { postsService } from "../../api";
+import { ImageUpload } from "./ImageUpload";
 
 const Form = (props : {goBack: () => void}) => {
     const clean = {
@@ -14,6 +15,7 @@ const Form = (props : {goBack: () => void}) => {
         availability: false,
         stock: null as number | null,
         author_name: "",
+        file: null as File | null,
     };
     const [formData, setFormData] = useState(clean);
     const [tagInput, setTagInput] = useState("");
@@ -85,7 +87,10 @@ const Form = (props : {goBack: () => void}) => {
     return (
         <div className="form-container">
             {showForm 
-                ? (<form className="form" onSubmit={handleSubmit}>
+                ? (<form 
+                        className="form" 
+                        onSubmit={handleSubmit}
+                        encType="multipart/form-data">
                     <h2 className="form-title">Agregar Producto</h2>
 
                     <label htmlFor="title">Título de la Publicación</label>
@@ -221,6 +226,8 @@ const Form = (props : {goBack: () => void}) => {
                         value={formData.stock ?? ""}
                         onChange={handleChange}
                     />
+
+                    <ImageUpload onImageSelect={(file) => formData.file = file}/>
 
                     <label htmlFor="author_name">Tu nombre</label>
                     <input 

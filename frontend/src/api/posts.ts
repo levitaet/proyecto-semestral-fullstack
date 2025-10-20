@@ -32,8 +32,11 @@ export const postsService = {
     availability: boolean;
     stock: number | null;
     author_name: string;
+    file?: File | null;
   }): Promise<Post> => {
-    const response = await http.post("/posts", postData);
+    const response = await http.post("/posts", postData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   },
 
