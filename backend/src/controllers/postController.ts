@@ -1,6 +1,8 @@
 import express, {Request, Response} from "express"
 import PostModel, { CATEGORIES } from '../models/posts';
 import type { MongoosePost } from  "../models/posts";
+import BASE_URL from "../utils/config";
+import path from "path";
 import multer from "multer";
 import { withUser } from "../middleware/middleware";
 import UserModel from "../models/users";
@@ -9,7 +11,7 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
-    cb(null, "uploads/"); 
+    cb(null, path.join(__dirname, "../../uploads/"));
   },
   filename: function (_req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
@@ -47,16 +49,18 @@ router.get("/:id", async (request, response) => {
 
 
 // POST crear un nuevo post (requiere autenticación)
-router.post("/", withUser, upload.array("images", 5), async (request: Request, response: Response) => {
+router.post("/", withUser, upload.single("file"), async (request: Request, response: Response) => {
+  
   const { title, product_name, description, price, tags, category, location, availability, stock } = request.body;
   
   if (!title || !product_name || !description || !price || !location || !category) {
     return response.status(400).json({ error: "Missing required fields" });
   }
 
-  const files = Array.isArray(request.files) ? request.files as Express.Multer.File[] : [];
-  const imagePaths = files.map((file) => file.path);
-
+  const imagePath = request.file
+      ? `/uploads/${request.file.filename}`
+      : `${BASE_URL}/api/uploads/no-image.png`;
+  console.log("Received image file:", request.file);
   const parsedTags = typeof tags === 'string' ? JSON.parse(tags) : tags || [];
 
   const user = await UserModel.findById(request.userId);
@@ -75,8 +79,10 @@ router.post("/", withUser, upload.array("images", 5), async (request: Request, r
     location,
     availability,
     stock,
-    images: imagePaths
+    image: imagePath
   });
+
+  console.log("Saving post with image in path:", imagePath);
 
   try {
     const savedPost = await post.save();

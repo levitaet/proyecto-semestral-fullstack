@@ -39,7 +39,7 @@ router.post("/", async (request, response) => {
       response.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "strict",
       });
       response.status(200).send({ 
         username: user.username,

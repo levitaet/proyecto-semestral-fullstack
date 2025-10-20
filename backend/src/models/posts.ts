@@ -13,7 +13,7 @@ interface Post {
   location: string;
   availability: boolean;
   stock: number | null;
-  images: string[];
+  image: string;
 }
 
 export interface MongoosePost extends Post { 
@@ -43,7 +43,7 @@ const postSchema = new mongoose.Schema<Post>({
   location: { type: String, required: true },
   availability: { type: Boolean, default: true },
   stock: { type: Number, default: null },
-  images: { type: [String], default: [] },
+  image: { type: String, default: "" },
 }, { 
   timestamps: true 
 }); 
