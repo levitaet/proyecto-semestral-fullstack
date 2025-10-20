@@ -5,6 +5,7 @@ import PostsList from "./PostsList";
 import PostDetail from "../post/PostDetail";
 import Register from "../register/Register";
 import Login from "../login/Login";
+import Profile from "../profile/Profile";
 import { loginService } from "../../api/login";
 import type { LoggedUser } from "../../api/login";
 
@@ -12,6 +13,7 @@ const HomeComponent = () => {
   const [showForm, setShowForm] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [user, setUser] = useState<LoggedUser | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -26,6 +28,7 @@ const HomeComponent = () => {
 
   const handlePostClick = (id: string) => {
     setSelectedPostId(id);
+    setShowProfile(false);
   };
 
   const handleGoBack = () => {
@@ -33,6 +36,7 @@ const HomeComponent = () => {
     setShowForm(false);
     setShowRegister(false);
     setShowLogin(false);
+    setShowProfile(false);
   };
 
   const handleShowForm = () => {
@@ -43,6 +47,7 @@ const HomeComponent = () => {
     setSelectedPostId(null);
     setShowRegister(false);
     setShowLogin(false);
+    setShowProfile(false);
     setShowForm(true);
   };
 
@@ -50,6 +55,7 @@ const HomeComponent = () => {
     setSelectedPostId(null);
     setShowForm(false);
     setShowLogin(false);
+    setShowProfile(false);
     setShowRegister(true);
   };
 
@@ -57,7 +63,20 @@ const HomeComponent = () => {
     setSelectedPostId(null);
     setShowForm(false);
     setShowRegister(false);
+    setShowProfile(false);
     setShowLogin(true);
+  };
+
+  const handleShowProfile = () => {
+    if (!user) {
+      setShowLogin(true);
+      return;
+    }
+    setSelectedPostId(null);
+    setShowForm(false);
+    setShowRegister(false);
+    setShowLogin(false);
+    setShowProfile(true);
   };
 
   const handleLogin = async (username: string, password: string) => {
@@ -94,7 +113,6 @@ const HomeComponent = () => {
           <div className="header-buttons">
             {user ? (
               <>
-                <span className="user-name">Hola, {user.username}</span>
                 <button 
                   className="btn-primary" 
                   type="button" 
@@ -109,6 +127,16 @@ const HomeComponent = () => {
                 >
                   Cerrar Sesión
                 </button>
+                <button 
+                  className="user-profile-btn" 
+                  type="button" 
+                  onClick={handleShowProfile}
+                  title="Ver mi perfil"
+                >
+                  <div className="user-avatar-small" />
+                  <span className="user-name">{user.username}</span>
+                </button>
+
               </>
             ) : (
               <>
@@ -129,12 +157,12 @@ const HomeComponent = () => {
               </>
             )}
           </div>
-
-          <div className="user-avatar" />
         </header>
 
         {selectedPostId ? (
           <PostDetail postId={selectedPostId} onGoBack={handleGoBack} />
+        ) : showProfile && user ? (
+          <Profile user={user} onGoBack={handleGoBack} onShowForm={handleShowForm} onPostClick={handlePostClick} />
         ) : showRegister ? (
           <Register goBack={() => setShowRegister(false)} />
         ) : showLogin ? (
