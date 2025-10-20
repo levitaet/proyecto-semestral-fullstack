@@ -20,3 +20,17 @@ cd frontend
 npm run dev
 ```
 inicia el backend
+
+
+
+
+Usuarios registrados:
+
+user: felipe
+pass: ola123
+
+user: Juanito
+pass: vendopan
+
+user: Pablito
+pass: agoclase
