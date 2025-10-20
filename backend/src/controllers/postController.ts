@@ -37,6 +37,20 @@ router.get("/categories", async (request, response) => {
   }
 });
 
+// GET posts del usuario autenticado
+router.get("/my-posts", withUser, async (request: Request, response: Response) => {
+  try {
+    const user = await UserModel.findById(request.userId).populate('posts');
+    if (!user) {
+      return response.status(404).json({ error: "User not found" });
+    }
+    response.json(user.posts);
+  } catch (error) {
+    console.error('Error fetching user posts:', error);
+    response.status(500).json({ error: 'Error fetching user posts' });
+  }
+});
+
 // GET un post por ID
 router.get("/:id", async (request, response) => {
   const { id } = request.params;
@@ -94,6 +108,33 @@ router.post("/", withUser, upload.single("file"), async (request: Request, respo
   } catch (error) {
     console.error('Error saving post:', error);
     response.status(500).json({ error: 'An error occurred while saving the post.' });
+  }
+});
+
+// DELETE un post por ID (requiere autenticación)
+router.delete("/:id", withUser, async (request: Request, response: Response) => {
+  try {
+    const { id } = request.params;
+    const post = await PostModel.findById(id);
+    if (!post) {
+      return response.status(404).json({ error: "Post not found" });
+    }
+
+    const user = await UserModel.findById(request.userId);
+    if (!user) {
+      return response.status(404).json({ error: "User not found" });
+    }
+    if (post.author_name !== user.username) {
+      return response.status(403).json({ error: "You can only delete your own posts" });
+    }
+
+    await PostModel.findByIdAndDelete(id);
+    user.posts = user.posts.filter(postId => postId.toString() !== id);
+    await user.save();
+    response.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    response.status(500).json({ error: 'Error deleting post' });
   }
 });
 
