@@ -3,6 +3,7 @@ import "./Profile.css";
 import type { Post } from "../../types/post";
 import { postsService } from "../../api";
 import type { LoggedUser } from "../../api/login";
+import { BACKEND_URL } from "../../api/http";
 
 interface ProfileProps {
   user: LoggedUser;
@@ -95,7 +96,7 @@ const Profile = ({ user, onGoBack, onPostClick, onShowForm, }: ProfileProps) => 
                   <div className="profile_post-image-wrap">
                     <img 
                       className="profile_post-image" 
-                      src={post.images[0] || "/img/brownies.png"} 
+                        src={`${BACKEND_URL}${post.image}`} 
                       alt={post.product_name} 
                     />
                     <span className="profile_post-tag">{post.category}</span>
