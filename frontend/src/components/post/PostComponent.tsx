@@ -1,4 +1,5 @@
 import "./PostComponent.css";
+import {BACKEND_URL} from "../../api/http";
 
 interface PostComponentProps {
   id: string;
@@ -11,7 +12,7 @@ interface PostComponentProps {
   location: string;
   availability: boolean;
   stock: number | null;
-  images: string[];
+  image: string;
   onPostClick?: (id: string) => void;
 }
 
@@ -24,7 +25,7 @@ const PostComponent = ({
   location,
   availability,
   stock,
-  images,
+  image,
   onPostClick
 }: PostComponentProps) => {
 
@@ -34,12 +35,10 @@ const PostComponent = ({
     }
   };
 
-  const mainImage = images.length > 0 ? images[0] : "/img/brownies.png";
-
   return (
     <article className="post-card">
       <div className="post-card_image-wrap">
-        <img className="post-card_image" src={mainImage} alt={product_name} />
+        <img className="post-card_image" src={`${BACKEND_URL}${image}`} alt={product_name} />
 
         <span className="post-card_tag">{category}</span>
 

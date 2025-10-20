@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./PostDetail.css";
 import type { Post } from "../../types/post";
 import { postsService } from "../../api";
+import { BACKEND_URL } from "../../api/http";
 
 interface PostDetailProps {
   postId: string;
@@ -21,8 +22,6 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
     return <div>Cargando...</div>; 
   }
 
-  const mainImage = post.images.length > 0 ? post.images[0] : "/img/brownies.png";
-
   return (
     <div className="post-detail">
       <div className="post-detail_container">
@@ -34,7 +33,7 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
           <div className="post-detail_image-section">
             <img 
               className="post-detail_image" 
-              src={mainImage} 
+              src={`${BACKEND_URL}${post.image}`} 
               alt={post.product_name} 
             />
             <div className="post-detail_badges">
@@ -91,16 +90,15 @@ const PostDetail = ({ postId, onGoBack }: PostDetailProps) => {
               <p>{post.description}</p>
             </div>
 
-            {post.images.length > 1 && (
-              <div className="post-detail_gallery">
+              {/* <div className="post-detail_gallery">
                 <h3>Más imágenes</h3>
                 <div className="gallery-grid">
                   {post.images.slice(1).map((image, index) => (
                     <img key={index} src={image} alt={`${post.product_name} ${index + 2}`} />
                   ))}
                 </div>
-              </div>
-            )}
+              </div> */}
+            
           </div>
         </article>
       </div>
