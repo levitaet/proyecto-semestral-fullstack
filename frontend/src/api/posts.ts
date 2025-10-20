@@ -21,6 +21,12 @@ export const postsService = {
     return response.data;
   },
 
+  // Obtener posts del usuario autenticado
+  getMyPosts: async (): Promise<Post[]> => {
+    const response = await axiosSecure.get("/posts/my-posts");
+    return response.data;
+  },
+
   // Crear un nuevo post
   create: async (postData: {
     title: string;
@@ -38,6 +44,11 @@ export const postsService = {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
+  },
+
+  // Eliminar un post por ID
+  delete: async (id: string): Promise<void> => {
+    await axiosSecure.delete(`/posts/${id}`);
   },
 
   // Eliminar todos los posts
