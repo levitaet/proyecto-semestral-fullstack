@@ -14,8 +14,17 @@ export interface MongooseUser extends User {
 }
 
 const userSchema = new mongoose.Schema<User>({
-  username: { type: String, required: true },
-  email: { type: String, required: true },
+  username: { 
+    type: String, 
+    required: true,
+    unique: true,
+    minlength: 3
+  },
+  email: { 
+    type: String, 
+    required: true,
+    unique: true
+  },
   passwordHash: { type: String, required: true },
   posts: [
     {
@@ -27,17 +36,24 @@ const userSchema = new mongoose.Schema<User>({
   timestamps: true 
 }); 
 
+const UserModel = mongoose.model<User>("User", userSchema);
+
 userSchema.set("toJSON", {
   transform: (
-    _,
-    returnedObject: MongooseUser
+        _document,
+        returnedObject: {
+            id?: string;
+            _id?: mongoose.Types.ObjectId;
+            __v?: number;
+            passwordHash?: string;
+        }
   ) => {
     returnedObject.id = returnedObject._id?.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
+    delete returnedObject.passwordHash;
   },
 });
 
-const UserModel = mongoose.model<User>("User", userSchema);
 
 export default UserModel;

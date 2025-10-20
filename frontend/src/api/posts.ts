@@ -1,5 +1,6 @@
 import http from "./http";
 import type { Post } from "../types/post";
+import axiosSecure from "./axiosSecure";
 
 export const postsService = {
   // Obtener todos los posts
@@ -16,7 +17,7 @@ export const postsService = {
 
   // Obtener todas las categorías
   getCategories: async (): Promise<string[]> => {
-    const response = await http.get("/posts/api/categories");
+    const response = await http.get("/posts/categories");
     return response.data;
   },
 
@@ -31,10 +32,9 @@ export const postsService = {
     location: string;
     availability: boolean;
     stock: number | null;
-    author_name: string;
     file?: File | null;
   }): Promise<Post> => {
-    const response = await http.post("/posts", postData, {
+    const response = await axiosSecure.post("/posts", postData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
