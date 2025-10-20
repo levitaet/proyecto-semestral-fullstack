@@ -1,18 +1,17 @@
-import express from "express"
+import express, { NextFunction, Request, Response} from "express"
 import bcrypt from "bcrypt";
 import UserModel from "../models/users";
 import type { MongooseUser } from  "../models/users";
 
 const router = express.Router();
 
-
-router.get("/", (request, response) => {
+router.get("/", (request: Request, response: Response) => {
   UserModel.find<MongooseUser>({}).then((users) => {
     response.json(users);
   });
 });
 
-router.get("/:id", async (request, response) => {
+router.get("/:id", async (request: Request, response: Response) => {
   const { id } = request.params;
   const user: MongooseUser | null = await UserModel.findById<MongooseUser>(id);
   if (!user) {
@@ -21,36 +20,41 @@ router.get("/:id", async (request, response) => {
   response.json(user);
 });
 
-router.post("/", async (request, response) => {
+router.post("/", async (request: Request, response: Response, next: NextFunction) => {
   const { username, email, password } = request.body;
-
-  const saltRounds = 10;
-  const passwordHash = await bcrypt.hash(password, saltRounds);
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!username || !email || !password) {
     return response.status(400).json({ error: "Missing required fields" });
   }
+
+  if (username.length < 3) {
+    return response.status(400).json({ error: "Username must be at least 3 characters" });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return response.status(400).json({ error: "Invalid Email" });
+  }
+
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(password, saltRounds);
 
   const user = new UserModel({
     username,
     email,
     passwordHash
   });
-  
-  if(emailRegex.test(email)) {
+
+  try {
     const savedUser = await user.save();
-    
     response.status(201).json(savedUser);
-  } else {
-    return response.status(401).json({error: "Invalid Email"});
-  };
+  } catch (error) {
+    next(error);
+    return response.status(500).json({ error: "Error creating user" });
+  }
+});
 
-})
-
-// Usar con precaución, elimina todos los usuarios
-router.delete("/all", async (req, res) => {
+router.delete("/all", async (req: Request, res: Response) => {
   try {
     await UserModel.deleteMany({});
     res.status(200).json({ message: "Todos los usuarios fueron eliminados correctamente" });

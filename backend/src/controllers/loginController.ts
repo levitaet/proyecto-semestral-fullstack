@@ -8,9 +8,14 @@ import crypto from "crypto";
 
 const router = express.Router();
 
-// LOGIN
 router.post("/", async (request, response) => {
   const { username, password } = request.body;
+
+  if (!username || !password) {
+    return response.status(400).json({
+      error: "Username and password are required",
+    });
+  }
 
   const user = await User.findOne({ username });
   if (user) {
@@ -28,14 +33,19 @@ router.post("/", async (request, response) => {
       };
 
       const token = jwt.sign(userForToken, config.JWT_SECRET, {
-        expiresIn: 60 * 60,
+        expiresIn: 60 * 60, // 1 hora
       });
-      response.setHeader("x-csrf-token", userForToken.csrf);
+      response.setHeader("X-CSRF-Token", userForToken.csrf);
       response.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
       });
-      response.status(200).send({ username: user.username });
+      response.status(200).send({ 
+        username: user.username,
+        email: user.email,
+        id: user._id
+      });
     }
   } else {
     response.status(401).json({
@@ -44,10 +54,19 @@ router.post("/", async (request, response) => {
   }
 });
 
-router.get("/me", withUser, async (request: Request & { userId?: string }, response) => {
-  const { body, userId } = request;
-  const user = await User.findById(userId);
+router.get("/me", withUser, async (request: Request, response) => {
+  const user = await User.findById(request.userId);
+  if (!user) {
+    return response.status(404).json({ error: "User not found" });
+  }
   response.status(200).json(user);
+});
+
+router.post("/logout", (request, response) => {
+  response.clearCookie("token");
+  response.status(200).send({
+    message: "Logged out successfully"
+  });
 });
 
 export default router;
