@@ -19,7 +19,11 @@ if (config.MONGODB_URI) {
 
 app.use(cors({
   origin: "http://localhost:5173",
-  credentials: true}));
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'X-CSRF-Token'],  
+  exposedHeaders: ['X-CSRF-Token']  
+}));
 app.use(cookieParser());
 app.use(express.static("out"));
 app.use(express.json());
