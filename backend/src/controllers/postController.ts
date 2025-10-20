@@ -1,7 +1,7 @@
 import express, {Request, Response} from "express"
 import PostModel, { CATEGORIES } from '../models/posts';
 import type { MongoosePost } from  "../models/posts";
-import BASE_URL from "../utils/config";
+import config from "../utils/config";
 import path from "path";
 import multer from "multer";
 import { withUser } from "../middleware/middleware";
@@ -57,8 +57,8 @@ router.post("/", withUser, upload.single("file"), async (request: Request, respo
   }
 
   const imagePath = request.file
-      ? `/uploads/${request.file.filename}`
-      : `${BASE_URL}/api/uploads/no-image.png`;
+      ? `${config.BASE_URL}/api/uploads/${request.file.filename}`
+      : `${config.BASE_URL}/api/uploads/no-image.png`;
   console.log("Received image file:", request.file);
   const parsedTags = typeof tags === 'string' ? JSON.parse(tags) : tags || [];
 
