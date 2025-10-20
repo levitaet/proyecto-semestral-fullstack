@@ -25,6 +25,12 @@ const Register = (props: { goBack: () => void }) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (formData.username.length < 3) {
+            setError("El nombre de usuario debe tener al menos 3 caracteres");
+            setMessage(null);
+            return;
+        }
         
         if (formData.password !== formData.confirmPassword) {
             setError("Las contraseñas no coinciden");

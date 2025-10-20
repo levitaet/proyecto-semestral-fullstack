@@ -15,7 +15,7 @@ const requestLogger = (
 };
 
 const errorHandler = (
-  error: any,
+  error: {name: string; message: string; code?: number},
   request: Request,
   response: Response,
   next: NextFunction
@@ -47,26 +47,24 @@ const errorHandler = (
   response.status(500).json({ error: "Error interno del servidor" });
 };
 
-
 export const withUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const authReq = req as Request & { userId?: string };
     const token = req.cookies?.token;
     if (!token) {
       res.status(401).json({ error: "missing token" });
     } else {
-      const decodedToken = jwt.verify(token, config.JWT_SECRET) as any;
+      const decodedToken = jwt.verify(token, config.JWT_SECRET);
       const csrfToken = req.headers["x-csrf-token"];
       if (
         typeof decodedToken === "object" &&
         decodedToken.id &&
         decodedToken.csrf == csrfToken
       ) {
-        authReq.userId = decodedToken.id;
+        req.userId = decodedToken.id;
         next();
       } else {
         res.status(401).json({ error: "invalid token" });

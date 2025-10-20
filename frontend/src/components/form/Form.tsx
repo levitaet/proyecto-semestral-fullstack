@@ -13,7 +13,6 @@ const Form = (props : {goBack: () => void}) => {
         location: "",
         availability: false,
         stock: null as number | null,
-        author_name: "",
     };
     const [formData, setFormData] = useState(clean);
     const [tagInput, setTagInput] = useState("");
@@ -77,7 +76,7 @@ const Form = (props : {goBack: () => void}) => {
             setShowForm(false);
         } catch (error) {
             console.error("Error adding product:", error);
-            setError("Ocurrió un error al agregar el producto :(");
+            setError("Ocurrió un error al agregar el producto. Debes iniciar sesión.");
             setMessage(null);
         }
     };
@@ -124,6 +123,7 @@ const Form = (props : {goBack: () => void}) => {
                         name="price" 
                         value={formData.price === 0 ? "" : formData.price}
                         onChange={handleChange}
+                        min="0"
                         required 
                     />
 
@@ -220,17 +220,7 @@ const Form = (props : {goBack: () => void}) => {
                         name="stock" 
                         value={formData.stock ?? ""}
                         onChange={handleChange}
-                    />
-
-                    <label htmlFor="author_name">Tu nombre</label>
-                    <input 
-                        type="text" 
-                        id="author_name" 
-                        name="author_name" 
-                        value={formData.author_name}
-                        onChange={handleChange}
-                        placeholder="Ingresa tu nombre"
-                        required 
+                        min="0"
                     />
 
                     <button type="submit" className="btn-primary">Publicar</button>
