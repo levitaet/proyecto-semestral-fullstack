@@ -1,5 +1,6 @@
 import http from "./http";
 import type { Post } from "../types/post";
+import axiosSecure from "./axiosSecure";
 
 export const postsService = {
   // Obtener todos los posts
@@ -16,7 +17,7 @@ export const postsService = {
 
   // Obtener todas las categorías
   getCategories: async (): Promise<string[]> => {
-    const response = await http.get("/posts/api/categories");
+    const response = await http.get("/posts/categories");
     return response.data;
   },
 

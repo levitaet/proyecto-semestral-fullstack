@@ -13,8 +13,7 @@ const Form = (props : {goBack: () => void}) => {
         category: "Otros",
         location: "",
         availability: false,
-        stock: null as number | null,
-        author_name: "",
+        stock: null as number | null,        
         file: null as File | null,
     };
     const [formData, setFormData] = useState(clean);
@@ -79,7 +78,7 @@ const Form = (props : {goBack: () => void}) => {
             setShowForm(false);
         } catch (error) {
             console.error("Error adding product:", error);
-            setError("Ocurrió un error al agregar el producto :(");
+            setError("Ocurrió un error al agregar el producto. Debes iniciar sesión.");
             setMessage(null);
         }
     };
@@ -129,6 +128,7 @@ const Form = (props : {goBack: () => void}) => {
                         name="price" 
                         value={formData.price === 0 ? "" : formData.price}
                         onChange={handleChange}
+                        min="0"
                         required 
                     />
 
