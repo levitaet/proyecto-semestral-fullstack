@@ -1,16 +1,17 @@
 import PostComponent from '../post/PostComponent';
-import type { Post } from '../../types/post';
 import { useEffect, useState } from "react";
 import { DropMenu } from "./DropMenu";
 import { postsService } from '../../api';
+import { usePostsStore } from '../../postsStore';
+import type { PostsState } from '../../postsStore';
 
 interface PostsListProps {
   onPostClick?: (id: string) => void;
 }
 
 const PostsList = ({ onPostClick }: PostsListProps) => {
-    const [posts, setPosts] = useState<Post[]>([]);
-    const [allPosts, setAllPosts] = useState<Post[]>([]);
+    const store : PostsState = usePostsStore();
+    
     const [categories, setCategories] = useState<string[]>([]);
     const [categoryExpanded, setCategoryExpanded] = useState(false);
     const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
@@ -19,30 +20,18 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
     const states = ["Cualquier disponibilidad", "En la U ahora"];
 
     useEffect(() => {
-        postsService.getCategories().then((categories) => {
+      postsService.getAll().then((posts) => {
+        store.setPosts(posts);
+      });
+
+      postsService.getCategories().then((categories) => {
             setCategories(["Todas", ...categories]);
         });
     }, []);
 
     useEffect(() => {
-        postsService.getAll().then((posts) => {
-            setAllPosts(posts);
-            setPosts(posts);
-        });
-    }, []);
-
-    useEffect(() => {
-        const filtered = allPosts.filter((post) => {
-            if (categoryFilter && categoryFilter !== "Todas" && post.category !== categoryFilter) {
-                return false;
-            }
-            if (availabilityFilter !== null && post.availability !== availabilityFilter) {
-                return false;
-            }
-            return true;
-        });
-        setPosts(filtered);
-    }, [categoryFilter, availabilityFilter, allPosts]);
+      store.setFilter(categoryFilter, availabilityFilter);
+    }, [categoryFilter, availabilityFilter, store.posts]);
 
     return (
         <div>
@@ -95,7 +84,7 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
         </section>
 
         <main className="home_grid">
-          {posts.map((post) => (
+          {store.filteredPosts.map((post) => (
             <PostComponent key={post.id} {...post} onPostClick={onPostClick}/>
           ))}
         </main>
