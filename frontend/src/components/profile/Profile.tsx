@@ -5,32 +5,23 @@ import { postsService } from "../../api";
 import { BACKEND_URL } from "../../api/http";
 import { useUserStore } from "../../usersStore";
 import { useNavigate } from "react-router-dom";
-import { loginService } from "../../api/loginService";
-import type { LoggedUser } from "../../types/user";
 
 
-const Profile = ({ user: propUser }: { user?: LoggedUser }) => {
+const Profile = () => {
   const navigate = useNavigate();
-  // const [user, setUser] = useState<LoggedUser | null>(propUser || null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const user = useUserStore((state) => state.user);
   useEffect(() => {
-    const init = async () => {
-      if (!propUser) {
-        const loggedUser = await loginService.restoreLogin();
-        if (!loggedUser) {
-          navigate("/login");
-          return;
-        }
-        setUser(loggedUser);
-      }
-      loadMyPosts();
-    };
-    init();
-  }, [propUser, navigate]);
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    loadMyPosts();
+  }, [user, navigate]);
+
 
   const loadMyPosts = async () => {
     try {

@@ -1,21 +1,13 @@
 import "./HomeComponent.css";
 import PostsList from "./PostsList";
-import PostDetail from "../post/PostDetail";
-import Register from "../register/Register";
-import Login from "../login/Login";
-import Profile from "../profile/Profile";
 import { loginService } from "../../api/loginService";
 import { useUserStore } from "../../usersStore";
 import { useNavigate } from "react-router-dom";
-import type { LoggedUser } from "../../types/user";
 
 
 interface HomeComponentProps {
-  user: LoggedUser | null;
   onLogout: () => Promise<void>;
 }
-
-  const store = useUserStore();
 
   // useEffect(() => {
   //   const init = async () => {
@@ -25,8 +17,10 @@ interface HomeComponentProps {
   //   init();
   // }, []);
 
-const HomeComponent = ({ user, onLogout }: HomeComponentProps) => {
+const HomeComponent = ({ onLogout }: HomeComponentProps) => {
   const navigate = useNavigate();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   const handleShowForm = () => {
     if (!user) {
@@ -67,7 +61,7 @@ const HomeComponent = ({ user, onLogout }: HomeComponentProps) => {
   //   handleGoBack();
 
   const handleShowProfile = () => {
-    if (!store.user) {
+    if (!user) {
       navigate("/login");
       return;
     }
@@ -75,7 +69,12 @@ const HomeComponent = ({ user, onLogout }: HomeComponentProps) => {
   };
 
   const handleLogout = async () => {
-    await onLogout();
+    if (onLogout) {
+      await onLogout();
+    } else {
+      await loginService.logout();
+      setUser(null);
+    }
     navigate("/");
   };
 
@@ -91,7 +90,7 @@ const HomeComponent = ({ user, onLogout }: HomeComponentProps) => {
           </div>
 
           <div className="header-buttons">
-            {store.user ? (
+            {user ? (
               <>
                 <button 
                   className="btn-primary" 
@@ -114,7 +113,7 @@ const HomeComponent = ({ user, onLogout }: HomeComponentProps) => {
                   title="Ver mi perfil"
                 >
                   <div className="user-avatar-small" />
-                  <span className="user-name">{store.user.username}</span>
+                  <span className="user-name">{user.username}</span>
                 </button>
               </>
             ) : (
