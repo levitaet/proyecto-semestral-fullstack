@@ -6,8 +6,8 @@ import PostDetail from "../post/PostDetail";
 import Register from "../register/Register";
 import Login from "../login/Login";
 import Profile from "../profile/Profile";
-import { loginService } from "../../api/login";
-import type { LoggedUser } from "../../api/login";
+import { loginService } from "../../api/loginService";
+import { useUserStore } from "../../usersStore";
 
 const HomeComponent = () => {
   const [showForm, setShowForm] = useState(false);
@@ -15,13 +15,14 @@ const HomeComponent = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
-  const [user, setUser] = useState<LoggedUser | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const store = useUserStore();
 
   useEffect(() => {
     const init = async () => {
       const user = await loginService.restoreLogin();
-      setUser(user);
+      store.setUser(user);
     };
     init();
   }, []);
@@ -40,7 +41,7 @@ const HomeComponent = () => {
   };
 
   const handleShowForm = () => {
-    if (!user) {
+    if (!store.user) {
       setShowLogin(true);
       return;
     }
@@ -68,7 +69,7 @@ const HomeComponent = () => {
   };
 
   const handleShowProfile = () => {
-    if (!user) {
+    if (!store.user) {
       setShowLogin(true);
       return;
     }
@@ -82,7 +83,7 @@ const HomeComponent = () => {
   const handleLogin = async (username: string, password: string) => {
     try {
       const user = await loginService.login({ username, password });
-      setUser(user);
+      store.setUser(user);
       setErrorMessage(null);
       setShowLogin(false);
     } catch (_error) {
@@ -95,7 +96,7 @@ const HomeComponent = () => {
 
   const handleLogout = async () => {
     await loginService.logout();
-    setUser(null);
+    store.setUser(null);
     handleGoBack();
   };
 
@@ -111,7 +112,7 @@ const HomeComponent = () => {
           </div>
 
           <div className="header-buttons">
-            {user ? (
+            {store.user ? (
               <>
                 <button 
                   className="btn-primary" 
@@ -134,7 +135,7 @@ const HomeComponent = () => {
                   title="Ver mi perfil"
                 >
                   <div className="user-avatar-small" />
-                  <span className="user-name">{user.username}</span>
+                  <span className="user-name">{store.user.username}</span>
                 </button>
 
               </>
@@ -161,8 +162,8 @@ const HomeComponent = () => {
 
         {selectedPostId ? (
           <PostDetail postId={selectedPostId} onGoBack={handleGoBack} />
-        ) : showProfile && user ? (
-          <Profile user={user} onGoBack={handleGoBack} onShowForm={handleShowForm} onPostClick={handlePostClick} />
+        ) : showProfile && store.user ? (
+          <Profile onGoBack={handleGoBack} onShowForm={handleShowForm} onPostClick={handlePostClick} />
         ) : showRegister ? (
           <Register goBack={() => setShowRegister(false)} />
         ) : showLogin ? (
