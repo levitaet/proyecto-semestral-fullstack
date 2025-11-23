@@ -9,7 +9,7 @@ export type PostsState = {
   addPost: (post: Post) => void;
   editPost: (id: string) => void;
   setPosts: (posts: Post[]) => void;
-  setFilter: (category: string | null, availability: boolean | null) => void;
+  setFilter: (filters: {category: string | null, availability: boolean | null}) => void;
 }
 
 export const usePostsStore = create<PostsState>((set) => ({
@@ -26,14 +26,14 @@ export const usePostsStore = create<PostsState>((set) => ({
   })),
   setPosts: (posts: Post[]) => set(() => ({ posts })),
   
-  setFilter: (category: string | null, availability: boolean | null) => set((state) => ({
-    categoryFilter: category ,
-    availabilityFilter: availability,
+  setFilter: (filters) => set((state) => ({
+    categoryFilter: filters.category ?? state.categoryFilter,
+    availabilityFilter: filters.availability ?? state.availabilityFilter,
     filteredPosts: state.posts.filter((post) => {
-      if (category && category !== "Todas" && post.category !== category) {
+      if (filters.category && filters.category !== "Todas" && post.category !== filters.category) {
         return false;
       }
-      if (availability && post.availability !== availability) {
+      if (filters.availability && post.availability !== filters.availability) {
         return false;
       }
       return true;
