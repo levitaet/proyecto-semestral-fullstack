@@ -1,18 +1,23 @@
 import { useState } from "react";
 import "./Login.css";
+import { useNavigate } from "react-router-dom";
 
 interface LoginProps {
-  onLogin: (username: string, password: string) => Promise<void>;
+  onLogin: (username: string, password: string) => Promise<boolean>;
   errorMessage: string | null;
 }
 
 const Login = ({ onLogin, errorMessage }: LoginProps) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onLogin(username, password);
+    const success = await onLogin(username, password);
+    if (success) {
+      navigate("/");
+    }
   };
 
   return (

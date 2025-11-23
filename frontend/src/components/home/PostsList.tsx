@@ -4,12 +4,11 @@ import { DropMenu } from "./DropMenu";
 import { postsService } from '../../api';
 import { usePostsStore } from '../../postsStore';
 import type { PostsState } from '../../postsStore';
+import { useNavigate } from "react-router-dom";
 
-interface PostsListProps {
-  onPostClick?: (id: string) => void;
-}
 
-const PostsList = ({ onPostClick }: PostsListProps) => {
+const PostsList = () => {
+  const navigate = useNavigate();
     const store : PostsState = usePostsStore(state => state);
     
     const [categories, setCategories] = useState<string[]>([]);
@@ -28,19 +27,30 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
       });
     }, []);
 
+  const handlePostClick = (id: string) => {
+    navigate(`/post/${id}`);
+  };
 
-    return (
-      <div>
-        <section className="home_filters">
-        <button type="button" className="filter-btn filter-btn--search" onClick={() => {}}>
+  return (
+    <div>
+      <section className="home_filters">
+        <button
+          type="button"
+          className="filter-btn filter-btn--search"
+          onClick={() => {}}
+        >
           <img src="/search-icon.svg" width="18" height="18" alt="lupita" />
           <span>Buscar productos o vendedores...</span>
         </button>
 
         <div className="filter-group">
-          <button type="button" className="filter-btn" onClick={() => {
-            setCategoryExpanded(!categoryExpanded);
-          }}>
+          <button
+            type="button"
+            className="filter-btn"
+            onClick={() => {
+              setCategoryExpanded(!categoryExpanded);
+            }}
+          >
             <span>{store.categoryFilter || "Todas"}</span>
             <span className="chevron">▾</span>
           </button>
@@ -81,7 +91,10 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
 
       <main className="home_grid">
         {store.filteredPosts.map((post) => (
-          <PostComponent key={post.id} {...post} onPostClick={onPostClick}/>
+          <PostComponent 
+            key={post.id} 
+            {...post} 
+            onPostClick={handlePostClick}/>
         ))}
       </main>
       </div>
