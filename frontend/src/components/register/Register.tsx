@@ -79,11 +79,8 @@ return (
                 margin="normal"
                 required
                 fullWidth
-                id="username"
                 label="Nombre de Usuario"
                 name="username"
-                autoComplete="username"
-                autoFocus
                 value={formData.username}
                 onChange={handleChange}
               />
@@ -91,10 +88,8 @@ return (
                 margin="normal"
                 required
                 fullWidth
-                id="email"
                 label="Email"
                 name="email"
-                autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
               />
@@ -105,8 +100,6 @@ return (
                 name="password"
                 label="Contraseña"
                 type="password"
-                id="password"
-                autoComplete="new-password"
                 value={formData.password}
                 onChange={handleChange}
               />
@@ -117,8 +110,6 @@ return (
                 name="confirmPassword"
                 label="Confirmar Contraseña"
                 type="password"
-                id="confirmPassword"
-                autoComplete="new-password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
               />
