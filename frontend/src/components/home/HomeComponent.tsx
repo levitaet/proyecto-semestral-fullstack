@@ -9,13 +9,6 @@ interface HomeComponentProps {
   onLogout: () => Promise<void>;
 }
 
-  // useEffect(() => {
-  //   const init = async () => {
-  //     const user = await loginService.restoreLogin();
-  //     store.setUser(user);
-  //   };
-  //   init();
-  // }, []);
 
 const HomeComponent = ({ onLogout }: HomeComponentProps) => {
   const navigate = useNavigate();
@@ -29,36 +22,6 @@ const HomeComponent = ({ onLogout }: HomeComponentProps) => {
     }
     navigate("/new-post");
   };
-
-  //     if (!store.user) {
-  //     setShowLogin(true);
-  //     return;
-  //   }
-  //   setSelectedPostId(null);
-  //   setShowForm(false);
-  //   setShowRegister(false);
-  //   setShowLogin(false);
-  //   setShowProfile(true);
-  // };
-
-  // const handleLogin = async (username: string, password: string) => {
-  //   try {
-  //     const user = await loginService.login({ username, password });
-  //     store.setUser(user);
-  //     setErrorMessage(null);
-  //     setShowLogin(false);
-  //   } catch (_error) {
-  //     setErrorMessage("Usuario o contraseña incorrectos");
-  //     setTimeout(() => {
-  //       setErrorMessage(null);
-  //     }, 5000);
-  //   }
-  // };
-
-  // const handleLogout = async () => {
-  //   await loginService.logout();
-  //   store.setUser(null);
-  //   handleGoBack();
 
   const handleShowProfile = () => {
     if (!user) {
