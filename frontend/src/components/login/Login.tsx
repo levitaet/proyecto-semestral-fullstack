@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
+import { TextField, Button, Box, Typography, Container, Alert } from "@mui/material";
 
 interface LoginProps {
   onLogin: (username: string, password: string) => Promise<boolean>;
@@ -21,36 +22,53 @@ const Login = ({ onLogin, errorMessage }: LoginProps) => {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>Iniciar Sesión</h2>
-
-        <label htmlFor="username">Usuario</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-
-        <label htmlFor="password">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-        <button type="submit" className="btn-primary">
-          Entrar
-        </button>
-      </form>
-    </div>
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Iniciar Sesión
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Usuario"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Contraseña"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {errorMessage && (
+            <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+              {errorMessage}
+            </Alert>
+          )}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Entrar
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
-};
+}
 
 export default Login;
