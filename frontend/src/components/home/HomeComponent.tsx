@@ -1,102 +1,44 @@
-import { useState, useEffect } from "react";
 import "./HomeComponent.css";
-import Form from "../form/Form";
 import PostsList from "./PostsList";
-import PostDetail from "../post/PostDetail";
-import Register from "../register/Register";
-import Login from "../login/Login";
-import Profile from "../profile/Profile";
-import { loginService } from "../../api/login";
-import type { LoggedUser } from "../../api/login";
+import { loginService } from "../../api/loginService";
+import { useUserStore } from "../../usersStore";
+import { useNavigate } from "react-router-dom";
 
-const HomeComponent = () => {
-  const [showForm, setShowForm] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
-  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
-  const [user, setUser] = useState<LoggedUser | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    const init = async () => {
-      const user = await loginService.restoreLogin();
-      setUser(user);
-    };
-    init();
-  }, []);
+interface HomeComponentProps {
+  onLogout: () => Promise<void>;
+}
 
-  const handlePostClick = (id: string) => {
-    setSelectedPostId(id);
-    setShowProfile(false);
-  };
 
-  const handleGoBack = () => {
-    setSelectedPostId(null);
-    setShowForm(false);
-    setShowRegister(false);
-    setShowLogin(false);
-    setShowProfile(false);
-  };
+const HomeComponent = ({ onLogout }: HomeComponentProps) => {
+  const navigate = useNavigate();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   const handleShowForm = () => {
     if (!user) {
-      setShowLogin(true);
+      navigate("/login");
       return;
     }
-    setSelectedPostId(null);
-    setShowRegister(false);
-    setShowLogin(false);
-    setShowProfile(false);
-    setShowForm(true);
-  };
-
-  const handleShowRegister = () => {
-    setSelectedPostId(null);
-    setShowForm(false);
-    setShowLogin(false);
-    setShowProfile(false);
-    setShowRegister(true);
-  };
-
-  const handleShowLogin = () => {
-    setSelectedPostId(null);
-    setShowForm(false);
-    setShowRegister(false);
-    setShowProfile(false);
-    setShowLogin(true);
+    navigate("/new-post");
   };
 
   const handleShowProfile = () => {
     if (!user) {
-      setShowLogin(true);
+      navigate("/login");
       return;
     }
-    setSelectedPostId(null);
-    setShowForm(false);
-    setShowRegister(false);
-    setShowLogin(false);
-    setShowProfile(true);
-  };
-
-  const handleLogin = async (username: string, password: string) => {
-    try {
-      const user = await loginService.login({ username, password });
-      setUser(user);
-      setErrorMessage(null);
-      setShowLogin(false);
-    } catch (_error) {
-      setErrorMessage("Usuario o contraseña incorrectos");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    }
+    navigate("/profile");
   };
 
   const handleLogout = async () => {
-    await loginService.logout();
-    setUser(null);
-    handleGoBack();
+    if (onLogout) {
+      await onLogout();
+    } else {
+      await loginService.logout();
+      setUser(null);
+    }
+    navigate("/");
   };
 
   return (
@@ -105,7 +47,7 @@ const HomeComponent = () => {
         <header className="home_topbar">
           <div className="brand">
             <img src="/icon.svg" className="brand_avatar" alt="logo" />
-            <button className="brand_name-btn" type="button" onClick={handleGoBack}>
+            <button className="brand_name-btn" type="button" onClick={() => navigate("/")}>
               <span className="brand_name">FCFMarket</span>
             </button>
           </div>
@@ -136,21 +78,20 @@ const HomeComponent = () => {
                   <div className="user-avatar-small" />
                   <span className="user-name">{user.username}</span>
                 </button>
-
               </>
             ) : (
               <>
                 <button 
                   className="btn-primary" 
                   type="button" 
-                  onClick={handleShowRegister}
+                  onClick={() => navigate("/register")}
                 >
                   Registrarse
                 </button>
                 <button 
                   className="btn-primary" 
                   type="button" 
-                  onClick={handleShowLogin}
+                  onClick={() => navigate("/login")}
                 >
                   Iniciar Sesión
                 </button>
@@ -159,19 +100,7 @@ const HomeComponent = () => {
           </div>
         </header>
 
-        {selectedPostId ? (
-          <PostDetail postId={selectedPostId} onGoBack={handleGoBack} />
-        ) : showProfile && user ? (
-          <Profile user={user} onGoBack={handleGoBack} onShowForm={handleShowForm} onPostClick={handlePostClick} />
-        ) : showRegister ? (
-          <Register goBack={() => setShowRegister(false)} />
-        ) : showLogin ? (
-          <Login onLogin={handleLogin} errorMessage={errorMessage} />
-        ) : showForm ? (
-          <Form goBack={() => setShowForm(false)} />
-        ) : (
-          <PostsList onPostClick={handlePostClick} />
-        )}
+        <PostsList />
       </div>
     </div>
   );
