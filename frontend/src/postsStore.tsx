@@ -9,7 +9,7 @@ export type PostsState = {
   addPost: (post: Post) => void;
   editPost: (id: string) => void;
   setPosts: (posts: Post[]) => void;
-  setFilter: (filters: {category: string | null, availability: boolean | null}) => void;
+  setFilter: (filters: {category?: string | null, availability?: boolean | null}) => void;
 }
 
 export const usePostsStore = create<PostsState>((set) => ({

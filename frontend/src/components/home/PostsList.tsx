@@ -10,7 +10,7 @@ interface PostsListProps {
 }
 
 const PostsList = ({ onPostClick }: PostsListProps) => {
-    const store : PostsState = usePostsStore();
+    const store : PostsState = usePostsStore(state => state);
     
     const [categories, setCategories] = useState<string[]>([]);
     const [categoryExpanded, setCategoryExpanded] = useState(false);
@@ -20,6 +20,7 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
     useEffect(() => {
       postsService.getAll().then((posts) => {
         store.setPosts(posts);
+        store.setFilter({});
       });
 
       postsService.getCategories().then((categories) => {
@@ -48,7 +49,7 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
               <DropMenu 
                 data={categories}
                 onSelect={(item : string) => {
-                  store.setFilter({category: item === "Todas" ? null : item, availability: null});
+                  store.setFilter({category: item === "Todas" ? null : item});
                   setCategoryExpanded(false);
                 }}
               />
@@ -68,7 +69,7 @@ const PostsList = ({ onPostClick }: PostsListProps) => {
               <DropMenu 
                 data={states}
                 onSelect={(item : string) => {
-                  store.setFilter({category: null, availability: item === "En la U ahora" ? true : null});
+                  store.setFilter({availability: item === "En la U ahora" ? true : null});
                   setAvailabilityExpanded(false);
                 }}
               />
