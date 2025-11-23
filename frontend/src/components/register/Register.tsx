@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./Register.css";
 import { usersService } from "../../api";
 import { useNavigate } from "react-router-dom";
+import { Container, Box, Typography, TextField, Button, Alert } from "@mui/material";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -58,71 +59,94 @@ const Register = () => {
     }
   };
 
-  return (
-    <div className="form-container">
-      {showForm ? (
-        <form className="form" onSubmit={handleSubmit}>
-          <h2 className="form-title">Registrarse</h2>
-
-          <label htmlFor="username">Nombre de Usuario</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="confirmPassword">Confirmar Contraseña</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-
-          <button type="submit" className="btn-primary">
-            Registrarse
-          </button>
-        </form>
-      ) : (
-        <div>
-          <p className="success-message">{message}</p>
-          <button
-            className="btn-primary"
-            type="button"
-            onClick={() => navigate("/")}
-          >
-            Ir al inicio
-          </button>
-        </div>
-      )}
-
-      {error && <p className="error-message">{error}</p>}
-    </div>
+return (
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {showForm ? (
+          <>
+            <Typography component="h1" variant="h5">
+              Registrarse
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="Nombre de Usuario"
+                name="username"
+                autoComplete="username"
+                autoFocus
+                value={formData.username}
+                onChange={handleChange}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+                autoComplete="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Contraseña"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirmar Contraseña"
+                type="password"
+                id="confirmPassword"
+                autoComplete="new-password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Registrarse
+              </Button>
+            </Box>
+          </>
+        ) : (
+          <Box sx={{ textAlign: 'center' }}>
+            {message && <Alert severity="success">{message}</Alert>}
+            <Button
+              variant="contained"
+              sx={{ mt: 2 }}
+              onClick={() => navigate("/")}
+            >
+              Ir al inicio
+            </Button>
+          </Box>
+        )}
+        {error && <Alert severity="error" sx={{ width: '100%', mt: 2 }}>{error}</Alert>}
+      </Box>
+    </Container>
   );
 };
 
