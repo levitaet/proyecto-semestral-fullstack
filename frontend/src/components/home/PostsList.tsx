@@ -1,22 +1,28 @@
 import PostComponent from "../post/PostComponent";
 import type { Post } from "../../types/post";
 import { useEffect, useState } from "react";
-import { DropMenu } from "./DropMenu";
 import { postsService } from "../../api";
 import { useNavigate } from "react-router-dom";
+import DropMenu from './DropMenu';
+
+import { 
+    Box, Grid as MuiGrid, TextField, InputAdornment
+} from "@mui/material";
+
+import SearchIcon from '@mui/icons-material/Search';
 
 const PostsList = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [categoryExpanded, setCategoryExpanded] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const [availabilityExpanded, setAvailabilityExpanded] = useState(false);
   const [availabilityFilter, setAvailabilityFilter] = useState<boolean | null>(
     null
   );
+  const [searchQuery, setSearchQuery] = useState(""); 
   const states = ["Cualquier disponibilidad", "En la U ahora"];
+
 
   useEffect(() => {
     postsService.getCategories().then((categories) => {
@@ -33,6 +39,16 @@ const PostsList = () => {
 
   useEffect(() => {
     const filtered = allPosts.filter((post) => {
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch =
+        post.title.toLowerCase().includes(searchLower) ||
+        post.product_name.toLowerCase().includes(searchLower) ||
+        post.author_name.toLowerCase().includes(searchLower);
+
+      if (!matchesSearch) {
+        return false;
+      }
+
       if (
         categoryFilter &&
         categoryFilter !== "Todas" &&
@@ -49,87 +65,73 @@ const PostsList = () => {
       return true;
     });
     setPosts(filtered);
-  }, [categoryFilter, availabilityFilter, allPosts]);
+  }, [categoryFilter, availabilityFilter, allPosts, searchQuery]);
 
   const handlePostClick = (id: string) => {
     navigate(`/post/${id}`);
   };
 
+  const handleCategorySelect = (item: string) => {
+    setCategoryFilter(item === "Todas" ? null : item);
+  };
+
+  const handleAvailabilitySelect = (item: string) => {
+    setAvailabilityFilter(item === "En la U ahora" ? true : null);
+  };
+
   return (
-    <div>
-      <section className="home_filters">
-        <button
-          type="button"
-          className="filter-btn filter-btn--search"
-          onClick={() => {}}
-        >
-          <img src="/search-icon.svg" width="18" height="18" alt="lupita" />
-          <span>Buscar productos o vendedores...</span>
-        </button>
+    <Box>
+      <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
+        <TextField
+          variant="outlined"
+          placeholder="Buscar productos o vendedores..."
+          sx={{ flexGrow: 1, minWidth: '250px' }}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+        
+        <DropMenu
+          title={categoryFilter || "Todas las categorías"}
+          items={categories}
+          onSelect={handleCategorySelect}
+        />
 
-        <div className="filter-group">
-          <button
-            type="button"
-            className="filter-btn"
-            onClick={() => {
-              setCategoryExpanded(!categoryExpanded);
-            }}
-          >
-            <span>{categoryFilter || "Todas"}</span>
-            <span className="chevron">▾</span>
-          </button>
-          {categoryExpanded && (
-            <div className="dropdown">
-              <DropMenu
-                data={categories}
-                onSelect={(item: string) => {
-                  setCategoryFilter(item === "Todas" ? null : item);
-                  setCategoryExpanded(false);
-                }}
+        <DropMenu
+          title={availabilityFilter ? "En la U ahora" : "Cualquier disponibilidad"}
+          items={states}
+          onSelect={handleAvailabilitySelect}
+        />
+      </Box>
+
+      <MuiGrid container spacing={4}>
+        {posts.map((post) => {
+          const gridProps = {
+            item: true,
+            xs: 12,
+            sm: 6,
+            md: 6,
+            lg: 4,
+            sx: { minWidth: '420px' }
+          };
+          
+          return (
+            <MuiGrid key={post.id} {...gridProps}>
+              <PostComponent
+                {...post}
+                onPostClick={handlePostClick}
               />
-            </div>
-          )}
-        </div>
-
-        <div className="filter-group">
-          <button
-            type="button"
-            className="filter-btn"
-            onClick={() => {
-              setAvailabilityExpanded(!availabilityExpanded);
-            }}
-          >
-            <span className="dot dot--on" />
-            <span>
-              {availabilityFilter
-                ? "En la U ahora"
-                : "Cualquier disponibilidad"}
-            </span>
-          </button>
-          {availabilityExpanded && (
-            <div className="dropdown">
-              <DropMenu
-                data={states}
-                onSelect={(item: string) => {
-                  setAvailabilityFilter(item === "En la U ahora" ? true : null);
-                  setAvailabilityExpanded(false);
-                }}
-              />
-            </div>
-          )}
-        </div>
-      </section>
-
-      <main className="home_grid">
-        {posts.map((post) => (
-          <PostComponent
-            key={post.id}
-            {...post}
-            onPostClick={handlePostClick}
-          />
-        ))}
-      </main>
-    </div>
+            </MuiGrid>
+          );
+        })}
+      </MuiGrid>
+    </Box>
   );
 };
 
