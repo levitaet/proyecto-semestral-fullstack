@@ -2,6 +2,7 @@ import "./HomeComponent.css";
 import PostsList from "./PostsList";
 import { useNavigate } from "react-router-dom";
 import type { LoggedUser } from "../../api/login";
+import { AppBar, Toolbar, Button, Box, Typography, Avatar, Container } from "@mui/material";
 
 interface HomeComponentProps {
   user: LoggedUser | null;
@@ -33,67 +34,98 @@ const HomeComponent = ({ user, onLogout }: HomeComponentProps) => {
   };
 
   return (
-    <div className="home">
-      <div className="home_container">
-        <header className="home_topbar">
-          <div className="brand">
-            <img src="/icon.svg" className="brand_avatar" alt="logo" />
-            <button className="brand_name-btn" type="button" onClick={() => navigate("/")}>
-              <span className="brand_name">FCFMarket</span>
-            </button>
-          </div>
+    <Box sx={{ backgroundColor: '#fef0ff', minHeight: '100vh' }}>
+      <AppBar position="static" sx={{ backgroundColor: '#ffffff', color: '#222', boxShadow: '0 2px 10px rgba(0,0,0,0.08)', border: '2px solid #e9d9f2' }}>
+        <Toolbar>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+            <Box
+              component="img"
+              src="/icon.svg"
+              alt="logo"
+              sx={{ width: 32, height: 32, mr: 1 }}
+            />
+            <Button color="inherit" onClick={() => navigate("/")} sx={{ color: '#222', p: 0 }}>
+              <Typography variant="h6" component="span" sx={{ fontWeight: 800 }}>
+                FCFMarket
+              </Typography>
+            </Button>
+          </Box>
 
-          <div className="header-buttons">
+          <Box>
             {user ? (
               <>
-                <button 
-                  className="btn-primary" 
-                  type="button" 
-                  onClick={handleShowForm}
+                <Button 
+                  variant="contained" 
+                  onClick={handleShowForm} 
+                  sx={{ 
+                    mr: 2,
+                    backgroundColor: '#aa6eae',
+                    color: '#fff',
+                    fontWeight: 700,
+                    borderRadius: '999px',
+                    '&:hover': {
+                      backgroundColor: '#9a5e9e'
+                    }
+                  }}
                 >
                   + Agregar Producto
-                </button>
-                <button 
-                  className="btn-secondary" 
-                  type="button" 
-                  onClick={handleLogout}
+                </Button>
+                <Button 
+                  onClick={handleLogout} 
+                  sx={{ 
+                    mr: 2, 
+                    color: '#222',
+                    fontWeight: 700,
+                    borderRadius: '999px'
+                  }}
                 >
                   Cerrar Sesión
-                </button>
-                <button 
-                  className="user-profile-btn" 
-                  type="button" 
-                  onClick={handleShowProfile}
-                  title="Ver mi perfil"
+                </Button>
+                <Button 
+                  onClick={handleShowProfile} 
+                  title="Ver mi perfil" 
+                  startIcon={<Avatar sx={{ width: 32, height: 32, background: 'linear-gradient(135deg, #aa6eae 0%, #764ba2 100%)' }} />}
+                  sx={{ 
+                    color: '#222',
+                    fontWeight: 600,
+                    borderRadius: '999px'
+                  }}
                 >
-                  <div className="user-avatar-small" />
-                  <span className="user-name">{user.username}</span>
-                </button>
+                  {user.username}
+                </Button>
               </>
             ) : (
               <>
-                <button 
-                  className="btn-primary" 
-                  type="button" 
+                <Button 
                   onClick={() => navigate("/register")}
+                  sx={{ 
+                    color: '#222',
+                    fontWeight: 700,
+                    borderRadius: '999px'
+                  }}
                 >
                   Registrarse
-                </button>
-                <button 
-                  className="btn-primary" 
-                  type="button" 
+                </Button>
+                <Button 
                   onClick={() => navigate("/login")}
+                  sx={{ 
+                    color: '#222',
+                    fontWeight: 700,
+                    borderRadius: '999px'
+                  }}
                 >
                   Iniciar Sesión
-                </button>
+                </Button>
               </>
             )}
-          </div>
-        </header>
+          </Box>
+        </Toolbar>
+      </AppBar>
 
+      <Container maxWidth="xl" sx={{ py: 4 }}>
         <PostsList />
-      </div>
-    </div>
+      </Container>
+    </Box>
   );
 };
 
