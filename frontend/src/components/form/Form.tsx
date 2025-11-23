@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import './Form.css';
 import { postsService } from "../../api";
 import { ImageUpload } from "./ImageUpload";
+import { useNavigate } from "react-router-dom";
 
-const Form = (props : {goBack: () => void}) => {
+const Form = () => {
+    const navigate = useNavigate();
     const clean = {
         title: "",
         product_name: "",
@@ -232,7 +234,7 @@ const Form = (props : {goBack: () => void}) => {
                     <button type="submit" className="btn-primary">Publicar</button>
                     </form>) 
             : <div>
-                <button className="btn-primary" type="button" onClick={props.goBack}>Volver</button>
+                <button className="btn-primary" type="button" onClick={() => navigate("/")}>Volver</button>
                 <button className="btn-primary" type="button" onClick={() => {
                     setFormData(clean);
                     setShowForm(true);
