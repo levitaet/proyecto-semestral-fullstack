@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "build:ui": "rm -rf public && cp -r ../frontend/dist public",
     "test": "cross-env NODE_ENV=test tsx --test tests/**/*.test.ts",
     "start": "cross-env NODE_ENV=production node out/index.js",
     "dev": "cross-env NODE_ENV=development ts-node-dev src/index.ts"

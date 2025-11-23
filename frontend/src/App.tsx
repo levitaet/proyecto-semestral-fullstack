@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route 
           path="/" 
-          element={<HomeComponent user={user} onLogout={handleLogout} />} 
+          element={<HomeComponent  onLogout={handleLogout} />} 
         />
         <Route 
           path="/post/:id" 
@@ -26,7 +26,7 @@ function App() {
           path="/profile" 
           element={
             user ? (
-              <Profile user={user} />
+              <Profile />
             ) : (
               <Navigate to="/login" replace />
             )

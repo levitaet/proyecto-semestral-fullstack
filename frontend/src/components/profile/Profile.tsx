@@ -3,31 +3,25 @@ import "./Profile.css";
 import type { Post } from "../../types/post";
 import { postsService } from "../../api";
 import { BACKEND_URL } from "../../api/http";
+import { useUserStore } from "../../usersStore";
 import { useNavigate } from "react-router-dom";
-import { loginService } from "../../api/login";
-import type { LoggedUser } from "../../api/login";
 
-const Profile = ({ user: propUser }: { user?: LoggedUser }) => {
+
+const Profile = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<LoggedUser | null>(propUser || null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  const user = useUserStore((state) => state.user);
   useEffect(() => {
-    const init = async () => {
-      if (!propUser) {
-        const loggedUser = await loginService.restoreLogin();
-        if (!loggedUser) {
-          navigate("/login");
-          return;
-        }
-        setUser(loggedUser);
-      }
-      loadMyPosts();
-    };
-    init();
-  }, [propUser, navigate]);
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    loadMyPosts();
+  }, [user, navigate]);
+
 
   const loadMyPosts = async () => {
     try {
@@ -79,8 +73,8 @@ const Profile = ({ user: propUser }: { user?: LoggedUser }) => {
         <header className="profile_header">
           <div className="profile_avatar-large" />
           <div className="profile_info">
-            <h1 className="profile_username">{user.username}</h1>
-            <p className="profile_email">{user.email}</p>
+            <h1 className="profile_username">{user?.username}</h1>
+            <p className="profile_email">{user?.email}</p>
             <p className="profile_stats">{posts.length} publicaciones</p>
           </div>
         </header>
