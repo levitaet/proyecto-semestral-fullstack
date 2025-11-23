@@ -2,21 +2,22 @@ import { useEffect, useState } from "react";
 import "./Profile.css";
 import type { Post } from "../../types/post";
 import { postsService } from "../../api";
-import type { LoggedUser } from "../../api/login";
 import { BACKEND_URL } from "../../api/http";
+import { useUserStore } from "../../usersStore";
+
 
 interface ProfileProps {
-  user: LoggedUser;
   onGoBack: () => void;
   onPostClick?: (id: string) => void;
   onShowForm: () => void;
 }
 
-const Profile = ({ user, onGoBack, onPostClick, onShowForm, }: ProfileProps) => {
+const Profile = ({ onGoBack, onPostClick, onShowForm, }: ProfileProps) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  const user = useUserStore((state) => state.user);
   useEffect(() => {
     loadMyPosts();
   }, []);
@@ -69,8 +70,8 @@ const Profile = ({ user, onGoBack, onPostClick, onShowForm, }: ProfileProps) => 
         <header className="profile_header">
           <div className="profile_avatar-large" />
           <div className="profile_info">
-            <h1 className="profile_username">{user.username}</h1>
-            <p className="profile_email">{user.email}</p>
+            <h1 className="profile_username">{user?.username}</h1>
+            <p className="profile_email">{user?.email}</p>
             <p className="profile_stats">{posts.length} publicaciones</p>
           </div>
         </header>
