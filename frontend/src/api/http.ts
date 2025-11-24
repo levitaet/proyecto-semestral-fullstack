@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = "http://localhost:3001/api";
+const BACKEND_URL = "https://fullstack.dcc.uchile.cl:7103/api";
 
 const http = axios.create({
   baseURL: `${BACKEND_URL}`, // URL base

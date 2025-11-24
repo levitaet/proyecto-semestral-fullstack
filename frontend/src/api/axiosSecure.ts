@@ -1,7 +1,8 @@
 import axios from "axios";
+import { BACKEND_URL } from "./http";
 
 const axiosSecure = axios.create({
-    baseURL: "http://localhost:3001/api",
+    baseURL: BACKEND_URL,
     withCredentials: true,
 });
 
