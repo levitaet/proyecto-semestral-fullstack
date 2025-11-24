@@ -6,21 +6,22 @@ import { useUserStore } from '../usersStore'
 export const useAuth = () => {
   const [user, setUser] = useState<LoggedUser | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const setUserStore = useUserStore((state) => state.setUser)
 
   useEffect(() => {
     const init = async () => {
       const user = await loginService.restoreLogin()
       setUser(user)
+      setUserStore(user)
     }
-    useUserStore.setState({ user });
     init()
-  }, [])
+  }, [setUserStore])
 
   const handleLogin = async (username: string, password: string) => {
     try {
       const user = await loginService.login({ username, password })
       setUser(user)
-      useUserStore.setState({ user });
+      setUserStore(user)
       setErrorMessage(null)
       return true
     } catch {
@@ -35,7 +36,7 @@ export const useAuth = () => {
   const handleLogout = async () => {
     await loginService.logout()
     setUser(null)
-    useUserStore.setState({ user: null });
+    setUserStore(null)
   }
 
   return { user, errorMessage, handleLogin, handleLogout }
