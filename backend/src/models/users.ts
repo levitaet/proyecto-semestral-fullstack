@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema<User>({
   timestamps: true 
 }); 
 
-const UserModel = mongoose.model<User>("User", userSchema);
+const UserModel = mongoose.model<User>("User", userSchema, "fcfmarket_users");
 
 userSchema.set("toJSON", {
   transform: (

@@ -59,7 +59,7 @@ postSchema.set("toJSON", {
   },
 });
 
-const PostModel = mongoose.model<Post>("Post", postSchema);
+const PostModel = mongoose.model<Post>("Post", postSchema, "fcfmarket_posts");
 
 export { CATEGORIES };
 export default PostModel;
