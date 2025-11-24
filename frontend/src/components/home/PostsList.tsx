@@ -1,104 +1,116 @@
-import PostComponent from '../post/PostComponent';
+import PostComponent from "../post/PostComponent";
 import { useEffect, useState } from "react";
-import { DropMenu } from "./DropMenu";
-import { postsService } from '../../api';
-import { usePostsStore } from '../../postsStore';
-import type { PostsState } from '../../postsStore';
+import DropMenu from "./DropMenu";
+import { postsService } from "../../api";
+import { usePostsStore } from "../../postsStore";
+import type { PostsState } from "../../postsStore";
 import { useNavigate } from "react-router-dom";
 
+import { Box, Grid as MuiGrid, TextField, InputAdornment } from "@mui/material";
+
+import SearchIcon from "@mui/icons-material/Search";
 
 const PostsList = () => {
   const navigate = useNavigate();
-    const store : PostsState = usePostsStore(state => state);
-    
-    const [categories, setCategories] = useState<string[]>([]);
-    const [categoryExpanded, setCategoryExpanded] = useState(false);
-    const [availabilityExpanded, setAvailabilityExpanded] = useState(false);
-    const states = ["Cualquier disponibilidad", "En la U ahora"];
+  const store: PostsState = usePostsStore((state) => state);
 
-    useEffect(() => {
-      postsService.getAll().then((posts) => {
-        store.setPosts(posts);
-        store.setFilter({});
-      });
+  const [categories, setCategories] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const states = ["Cualquier disponibilidad", "En la U ahora"];
 
-      postsService.getCategories().then((categories) => {
-        setCategories(["Todas", ...categories]);
-      });
-    }, []);
+  useEffect(() => {
+    postsService.getAll().then((posts) => {
+      store.setPosts(posts);
+      store.setFilter({});
+    });
+
+    postsService.getCategories().then((categories) => {
+      setCategories(["Todas", ...categories]);
+    });
+  }, []);
 
   const handlePostClick = (id: string) => {
     navigate(`/post/${id}`);
   };
 
-  return (
-    <div>
-      <section className="home_filters">
-        <button
-          type="button"
-          className="filter-btn filter-btn--search"
-          onClick={() => {}}
-        >
-          <img src="/search-icon.svg" width="18" height="18" alt="lupita" />
-          <span>Buscar productos o vendedores...</span>
-        </button>
+  const handleCategorySelect = (item: string) => {
+    store.setFilter({
+      ...store.filter,
+      category: item === "Todas" ? null : item,
+    });
+  };
 
-        <div className="filter-group">
-          <button
-            type="button"
-            className="filter-btn"
-            onClick={() => {
-              setCategoryExpanded(!categoryExpanded);
-            }}
-          >
-            <span>{store.categoryFilter || "Todas"}</span>
-            <span className="chevron">▾</span>
-          </button>
-          {categoryExpanded && (
-            <div className="dropdown">
-              <DropMenu 
-                data={categories}
-                onSelect={(item : string) => {
-                  store.setFilter({category: item === "Todas" ? null : item});
-                  setCategoryExpanded(false);
-                }}
-              />
-            </div>
-          )}  
-        </div>
+  const handleAvailabilitySelect = (item: string) => {
+    store.setFilter({
+      ...store.filter,
+      availability: item === "En la U ahora" ? true : null,
+    });
+  };
 
-        <div className="filter-group">
-          <button type="button" className="filter-btn" onClick={() => {
-            setAvailabilityExpanded(!availabilityExpanded);
-          }}>
-            <span className="dot dot--on" />
-            <span>{store.availabilityFilter ? "En la U ahora" : "Cualquier disponibilidad"}</span>
-          </button>
-          {availabilityExpanded && (
-            <div className="dropdown">
-              <DropMenu 
-                data={states}
-                onSelect={(item : string) => {
-                  store.setFilter({availability: item === "En la U ahora" ? true : null});
-                  setAvailabilityExpanded(false);
-                }}
-              />
-            </div>
-          )}
-        </div>
-
-      </section>
-
-      <main className="home_grid">
-        {store.filteredPosts.map((post) => (
-          <PostComponent 
-            key={post.id} 
-            {...post} 
-            onPostClick={handlePostClick}/>
-        ))}
-      </main>
-      </div>
+  const displayPosts = store.filteredPosts.filter((post) => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(searchLower) ||
+      post.product_name.toLowerCase().includes(searchLower) ||
+      post.author_name.toLowerCase().includes(searchLower)
     );
+  });
+
+  return (
+    <Box>
+      <Box sx={{ display: "flex", gap: 2, mb: 3, flexWrap: "wrap" }}>
+        <TextField
+          variant="outlined"
+          placeholder="Buscar productos o vendedores..."
+          sx={{ flexGrow: 1, minWidth: "250px" }}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <DropMenu
+          title={store.filter?.category || "Todas las categorías"}
+          items={categories}
+          onSelect={handleCategorySelect}
+        />
+
+        <DropMenu
+          title={
+            store.filter?.availability
+              ? "En la U ahora"
+              : "Cualquier disponibilidad"
+          }
+          items={states}
+          onSelect={handleAvailabilitySelect}
+        />
+      </Box>
+
+      <MuiGrid container spacing={4}>
+        {displayPosts.map((post) => {
+          const gridProps = {
+            item: true,
+            xs: 12,
+            sm: 6,
+            md: 6,
+            lg: 4,
+            sx: { minWidth: "420px" },
+          };
+
+          return (
+            <MuiGrid key={post.id} {...gridProps}>
+              <PostComponent {...post} onPostClick={handlePostClick} />
+            </MuiGrid>
+          );
+        })}
+      </MuiGrid>
+    </Box>
+  );
 };
 
 export default PostsList;
