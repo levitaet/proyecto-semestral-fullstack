@@ -3,6 +3,10 @@ import './Form.css';
 import { postsService } from "../../api";
 import { ImageUpload } from "./ImageUpload";
 import { useNavigate } from "react-router-dom";
+import { 
+    Container, Box, Typography, TextField, Button, Alert, Select, MenuItem, 
+    FormControl, InputLabel, Checkbox, FormControlLabel, Chip, Stack 
+} from "@mui/material";
 
 const Form = () => {
     const navigate = useNavigate();
@@ -32,8 +36,9 @@ const Form = () => {
         });
     }, []);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target;
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | import('@mui/material').SelectChangeEvent) => {
+        const { name, value} = e.target;
+        const type = (e.target as HTMLInputElement).type; 
         if (type === "checkbox") {
             setFormData({
                 ...formData,
@@ -86,165 +91,69 @@ const Form = () => {
     };
 
     return (
-        <div className="form-container">
-            {showForm 
-                ? (<form 
-                        className="form" 
-                        onSubmit={handleSubmit}
-                        encType="multipart/form-data">
-                    <h2 className="form-title">Agregar Producto</h2>
+        <Container component="main" maxWidth="sm">
+            <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {showForm ? (
+                    <Box component="form" onSubmit={handleSubmit} encType="multipart/form-data" noValidate sx={{ mt: 1, width: '100%' }}>
+                        <Typography component="h1" variant="h5" align="center">
+                            Agregar Producto
+                        </Typography>
+                        
+                        <TextField margin="normal" required fullWidth id="title" label="Título de la Publicación" name="title" value={formData.title} onChange={handleChange} autoFocus />
+                        <TextField margin="normal" required fullWidth id="product_name" label="Nombre del Producto/Servicio" name="product_name" value={formData.product_name} onChange={handleChange} />
+                        <TextField margin="normal" required fullWidth multiline rows={4} id="description" label="Descripción" name="description" value={formData.description} onChange={handleChange} />
+                        <TextField margin="normal" required fullWidth type="number" id="price" label="Precio" name="price" value={formData.price === 0 ? "" : formData.price} onChange={handleChange} InputProps={{ inputProps: { min: 0 } }} />
+                        
+                        <FormControl fullWidth margin="normal" required>
+                            <InputLabel id="category-label">Categoría</InputLabel>
+                            <Select labelId="category-label" id="category" name="category" value={formData.category} label="Categoría" onChange={handleChange}>
+                                {availableCategories.map((cat) => (
+                                    <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
 
-                    <label htmlFor="title">Título de la Publicación</label>
-                    <input 
-                        type="text" 
-                        id="title" 
-                        name="title" 
-                        value={formData.title}
-                        onChange={handleChange} 
-                        required 
-                    />
+                        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 2 }}>
+                            <TextField
+                                fullWidth
+                                label="Tags"
+                                value={tagInput}
+                                onChange={(e) => setTagInput(e.target.value)}
+                                onKeyUp={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddTag(); } }}
+                                placeholder="Escribe un tag y presiona Enter"
+                            />
+                            <Button variant="outlined" onClick={handleAddTag}>Agregar</Button>
+                        </Box>
+                        <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: 'wrap' }}>
+                            {formData.tags.map((tag) => (
+                                <Chip key={tag} label={tag} onDelete={() => handleRemoveTag(tag)} />
+                            ))}
+                        </Stack>
 
-                    <label htmlFor="product_name">Nombre del Producto/Servicio</label>
-                    <input 
-                        type="text" 
-                        id="product_name" 
-                        name="product_name" 
-                        value={formData.product_name}
-                        onChange={handleChange} 
-                        required 
-                    />
+                        <TextField margin="normal" required fullWidth id="location" label="Ubicación" name="location" value={formData.location} onChange={handleChange} />
+                        <TextField margin="normal" fullWidth type="number" id="stock" label="Stock" name="stock" value={formData.stock ?? ""} onChange={handleChange} />
 
-                    <label htmlFor="description">Descripción</label>
-                    <textarea 
-                        id="description" 
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        required 
-                    />
+                        <FormControlLabel control={<Checkbox name="availability" checked={formData.availability} onChange={handleChange} />} label="Disponible en la U ahora" />
 
-                    <label htmlFor="price">Precio</label>
-                    <input 
-                        type="number" 
-                        id="price" 
-                        name="price" 
-                        value={formData.price === 0 ? "" : formData.price}
-                        onChange={handleChange}
-                        min="0"
-                        required 
-                    />
+                        <Box mt={2} mb={2}>
+                            <Typography variant="subtitle1">Imagen del Producto</Typography>
+                            <ImageUpload onImageSelect={(file) => formData.file = file} />
+                        </Box>
 
-                    <label htmlFor="category">Categoría</label>
-                    <select 
-                        id="category" 
-                        name="category" 
-                        value={formData.category}
-                        onChange={handleChange}
-                        required
-                    >
-                        {availableCategories.map((cat) => (
-                            <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                    </select>
-
-                    <label htmlFor="tags">Tags (Escribe y presiona "Agregar")</label>
-                    <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                        <input 
-                            type="text" 
-                            id="tagInput" 
-                            value={tagInput}
-                            onChange={(e) => setTagInput(e.target.value)}
-                            onKeyUp={(e) => {
-                                if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    handleAddTag();
-                                }
-                            }}
-                            placeholder="Escribe un tag..."
-                        />
-                        <button 
-                            type="button" 
-                            onClick={handleAddTag}
-                            className="btn-secondary"
-                        >
-                            Agregar
-                        </button>
-                    </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
-                        {formData.tags.map((tag, index) => (
-                            <span 
-                                key={index} 
-                                style={{ 
-                                    background: '#e0e0e0', 
-                                    padding: '4px 8px', 
-                                    borderRadius: '4px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '4px'
-                                }}
-                            >
-                                {tag}
-                                <button 
-                                    type="button"
-                                    onClick={() => handleRemoveTag(tag)}
-                                    style={{ 
-                                        background: 'none', 
-                                        border: 'none', 
-                                        cursor: 'pointer',
-                                        fontSize: '16px'
-                                    }}
-                                >
-                                    ×
-                                </button>
-                            </span>
-                        ))}
-                    </div>
-
-                    <label htmlFor="location">Ubicación</label>
-                    <input 
-                        type="text" 
-                        id="location" 
-                        name="location" 
-                        value={formData.location}
-                        onChange={handleChange}
-                        required 
-                    />
-
-                    <label>
-                        Disponible en la U ahora
-                        <input 
-                            type="checkbox" 
-                            name="availability" 
-                            checked={formData.availability}
-                            onChange={handleChange}
-                        />
-                    </label>
-
-                    <label htmlFor="stock">Stock</label>
-                    <input 
-                        type="number" 
-                        id="stock" 
-                        name="stock" 
-                        value={formData.stock ?? ""}
-                        onChange={handleChange}
-                    />
-
-                    <ImageUpload onImageSelect={(file) => formData.file = file}/>
-
-                    <button type="submit" className="btn-primary">Publicar</button>
-                    </form>) 
-            : <div>
-                <button className="btn-primary" type="button" onClick={() => navigate("/")}>Volver</button>
-                <button className="btn-primary" type="button" onClick={() => {
-                    setFormData(clean);
-                    setShowForm(true);
-                }}>Agregar otro producto</button>
-                {message && <p className="success-message">{message}</p>}
-            </div>
-            }
-            
-            {error && <p className="error-message">{error}</p>}
-        </div>
+                        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Publicar</Button>
+                    </Box>
+                ) : (
+                    <Box sx={{ textAlign: 'center', mt: 4 }}>
+                        {message && <Alert severity="success" sx={{ mb: 2 }}>{message}</Alert>}
+                        <Stack direction="row" spacing={2} justifyContent="center">
+                            <Button variant="contained" onClick={() => navigate("/")}>Volver al Inicio</Button>
+                            <Button variant="outlined" onClick={() => { setFormData(clean); setShowForm(true); }}>Agregar otro producto</Button>
+                        </Stack>
+                    </Box>
+                )}
+                {error && <Alert severity="error" sx={{ width: '100%', mt: 2 }}>{error}</Alert>}
+            </Box>
+        </Container>
     );
 };
 
