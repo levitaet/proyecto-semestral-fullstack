@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { loginService } from '../api/login'
-import type { LoggedUser } from '../api/login'
+import { loginService } from '../api/loginService'
+import type { LoggedUser } from '../types/user'
+import { useUserStore } from '../usersStore'
 
 export const useAuth = () => {
   const [user, setUser] = useState<LoggedUser | null>(null)
@@ -11,6 +12,7 @@ export const useAuth = () => {
       const user = await loginService.restoreLogin()
       setUser(user)
     }
+    useUserStore.setState({ user });
     init()
   }, [])
 
@@ -18,6 +20,7 @@ export const useAuth = () => {
     try {
       const user = await loginService.login({ username, password })
       setUser(user)
+      useUserStore.setState({ user });
       setErrorMessage(null)
       return true
     } catch {
@@ -32,6 +35,7 @@ export const useAuth = () => {
   const handleLogout = async () => {
     await loginService.logout()
     setUser(null)
+    useUserStore.setState({ user: null });
   }
 
   return { user, errorMessage, handleLogin, handleLogout }
