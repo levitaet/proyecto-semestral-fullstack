@@ -4,8 +4,7 @@ import type { Post } from "./types/post";
 export type PostsState = {
   posts: Post[];
   filteredPosts: Post[];
-  categoryFilter?: string | null;
-  availabilityFilter?: boolean | null;
+  filter?: {category?: string | null, availability?: boolean | null};
   addPost: (post: Post) => void;
   editPost: (id: string) => void;
   setPosts: (posts: Post[]) => void;
@@ -15,8 +14,7 @@ export type PostsState = {
 export const usePostsStore = create<PostsState>((set) => ({
   posts: [],
   filteredPosts: [],
-  categoryFilter: null,
-  availabilityFilter: null,
+  filter: {},
 
   addPost: (post: Post) => set((state) => ({ posts: [...state.posts, post] })),
   editPost: (id: string) => set((state) => ({
@@ -24,19 +22,27 @@ export const usePostsStore = create<PostsState>((set) => ({
       post.id === id ? { ...post, edited: true } : post
     ),
   })),
-  setPosts: (posts: Post[]) => set(() => ({ posts })),
+  setPosts: (posts: Post[]) => set(() => ({ posts, filteredPosts: posts })),
   
-  setFilter: (filters) => set((state) => ({
-    categoryFilter: filters.category ?? state.categoryFilter,
-    availabilityFilter: filters.availability ?? state.availabilityFilter,
-    filteredPosts: state.posts.filter((post) => {
-      if (filters.category && filters.category !== "Todas" && post.category !== filters.category) {
+  setFilter: (filters) => set((state) => {
+    const newFilter = {
+      category: filters.category !== undefined ? filters.category : state.filter?.category,
+      availability: filters.availability !== undefined ? filters.availability : state.filter?.availability,
+    };
+
+    const filteredPosts = state.posts.filter((post) => {
+      if (newFilter.category && newFilter.category !== "Todas" && post.category !== newFilter.category) {
         return false;
       }
-      if (filters.availability && post.availability !== filters.availability) {
+      if (newFilter.availability !== null && newFilter.availability !== undefined && post.availability !== newFilter.availability) {
         return false;
       }
       return true;
-    }),
-  }))
+    });
+
+    return {
+      filter: newFilter,
+      filteredPosts,
+    };
+  })
 }));
