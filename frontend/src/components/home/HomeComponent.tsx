@@ -1,16 +1,20 @@
 import "./HomeComponent.css";
 import PostsList from "./PostsList";
+import { loginService } from "../../api/loginService";
+import { useUserStore } from "../../usersStore";
 import { useNavigate } from "react-router-dom";
 import type { LoggedUser } from "../../api/login";
 import { AppBar, Toolbar, Button, Box, Typography, Avatar, Container } from "@mui/material";
 
 interface HomeComponentProps {
-  user: LoggedUser | null;
   onLogout: () => Promise<void>;
 }
 
-const HomeComponent = ({ user, onLogout }: HomeComponentProps) => {
+
+const HomeComponent = ({ onLogout }: HomeComponentProps) => {
   const navigate = useNavigate();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   const handleShowForm = () => {
     if (!user) {
@@ -29,7 +33,12 @@ const HomeComponent = ({ user, onLogout }: HomeComponentProps) => {
   };
 
   const handleLogout = async () => {
-    await onLogout();
+    if (onLogout) {
+      await onLogout();
+    } else {
+      await loginService.logout();
+      setUser(null);
+    }
     navigate("/");
   };
 
