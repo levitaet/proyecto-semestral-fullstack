@@ -53,11 +53,9 @@ const HomeComponent = ({ onLogout }: HomeComponentProps) => {
               alt="logo"
               sx={{ width: 32, height: 32, mr: 1 }}
             />
-            <Button color="inherit" onClick={() => navigate("/")} sx={{ color: '#222', p: 0 }}>
-              <Typography variant="h6" component="span" sx={{ fontWeight: 800 }}>
-                FCFMarket
-              </Typography>
-            </Button>
+            <Typography variant="h6" component="span" sx={{ fontWeight: 800 }}>
+              FCFMarket
+            </Typography>
           </Box>
 
           <Box>
