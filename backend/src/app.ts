@@ -27,6 +27,7 @@ app.use(cors({
 }));
 app.use(cookieParser());
 app.use(express.static("out"));
+
 app.use(express.json());
 
 app.use(middleware.requestLogger);
@@ -37,4 +38,10 @@ app.use("/api/uploads", express.static(path.join(__dirname, "../uploads")));
 
 
 app.use(middleware.errorHandler);
+
+if (config.NODE_ENV === "production") {
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+  });
+}
 export default app;

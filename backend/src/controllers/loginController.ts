@@ -38,8 +38,8 @@ router.post("/", async (request, response) => {
       response.setHeader("X-CSRF-Token", userForToken.csrf);
       response.cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: config.NODE_ENV === "production",
+        sameSite: config.NODE_ENV === "production" ? "none" : "lax",
       });
       response.status(200).send({ 
         username: user.username,
