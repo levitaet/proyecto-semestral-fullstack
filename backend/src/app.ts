@@ -8,6 +8,7 @@ import userRouter from "./controllers/userController";
 import postsRouter from "./controllers/postController";
 import path from "path";
 import loginRouter from "./controllers/loginController";
+import testingRouter from "./test/controllers/testingController";
 
 const app = express();
 
@@ -34,6 +35,10 @@ app.use("/api/users", userRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/uploads", express.static(path.join(__dirname, "../uploads")));
+
+if (process.env.NODE_ENV === "test") {
+  app.use("/api/test", testingRouter);
+}
 
 
 app.use(middleware.errorHandler);
